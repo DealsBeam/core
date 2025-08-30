@@ -32,7 +32,7 @@
 <Variable name="analyticId" description="Analytic ID" type="string" value=""/>
 [!] New Google Analytic 2021
 
-<Variable name="caPubAdsense" description="caPubAdsense ID" type="string" value=""/> 
+<Variable name="caPubAdsense" description="caPubAdsense ID" type="string" value=""/>
 [!] number only
 
 <Variable name="autoTOC" description="Table of content" type="string" value="true"/>
@@ -67,7 +67,7 @@
 <Variable name="title.h4" description="H4 Size" type="length" default="20px" min="12px" max="50px" value="20px"/>
 <Variable name="title.h5" description="H5 Size" type="length" default="18px" min="12px" max="50px" value="18px"/>
 <Variable name="title.h6" description="H6 Size" type="length" default="16px" min="12px" max="50px" value="16px"/>
-</Group> 
+</Group>
 
 <Group description="_Logo">
 <Variable name="logo.width" description="Logo Max Width" type="length" default="200px" min="50px" max="500px" value="200px"/>
@@ -916,7 +916,7 @@ width: 50%;
 <meta expr:content='data:blog.title + &quot; Team&quot;' name='author'/>
 <meta expr:content='data:blog.title' name='application-name'/>
 <meta expr:content='data:blog.adultContent ? &quot;adult&quot; : &quot;general&quot;' name='rating'/>
-      
+
 <!-- Favicon -->
 <b:if cond='data:skin.vars.favicon'>
 <b:with value='data:skin.vars.favicon' var='favicon'>
@@ -1066,7 +1066,7 @@ width: 50%;
 <div id='primary'>
 <div class='container px-0'>
 <div class='d-lg-flex' id='main-content'>
-<div class='col-lg-8 px-3' id='main'>
+<div class='col-lg-8 px-3' id='main' role='main'>
 <b:if cond='data:view.isMultipleItems and !data:view.isError or !data:numPosts == 0'><b:with value='data:view.isHomepage ? &quot;Homepage &quot; + data:blog.title : data:blog.pageName ? data:blog.pageName : &quot;Latest Posts&quot;' var='auto_heading'><h1 class='d-none'><data:auto_heading/></h1></b:with></b:if>
 <b:section class='pt-4' cond='data:view.isMultipleItems and !data:view.search.query' id='before-blog' showaddelement='yes'>
   <b:widget id='HTML11' locked='false' title='#Advertisement' type='HTML' visible='true'>
@@ -1273,7 +1273,7 @@ width: 50%;
   </b:widget>
 </b:section>
 </div>
-<div class='col-lg-4 px-3 pb-5 separator-main position-relative ms-auto' content='itemid' id='sidebar' itemid='#sidebar' itemscope='itemscope' itemtype='https://schema.org/WPSideBar'>
+<div class='col-lg-4 px-3 pb-5 separator-main position-relative ms-auto' content='itemid' id='sidebar' itemid='#sidebar' itemscope='itemscope' itemtype='https://schema.org/WPSideBar' role='complementary'>
 <b:section class='pt-4' id='sidebar-static' itemscope='itemscope'>
   <b:widget id='PopularPosts10' locked='false' title='Popular Posts' type='PopularPosts' visible='true'>
     <b:widget-settings>
@@ -1475,7 +1475,7 @@ width: 50%;
 </div>
 </footer>
 
-<div class='position-fixed d-none' id='back-to-top' style='right:20px;bottom:20px'><a aria-label='Back to Top' class='btn btn-sm jt-btn-light rounded-circle jt-icon-center' href='#back-to-top' onclick='window.scroll({top:0,left: 0,behavior:&apos;smooth&apos;});'><svg aria-hidden='true' class='jt-icon' height='1em' width='1em'><use xlink:href='#i-arrow-t'/></svg></a></div>
+<div class='position-fixed d-none' id='back-to-top' style='right:20px;bottom:20px'><a aria-label='Back to Top' class='btn btn-sm jt-btn-light rounded-circle jt-icon-center' href='#back-to-top' onclick='window.scroll({top:0,left: 0,behavior:&apos;smooth&apos;});' role='button'><svg aria-hidden='true' class='jt-icon' height='1em' width='1em'><use xlink:href='#i-arrow-t'/></svg></a></div>
 
 <b:section class='d-none' id='jet-options' maxwidgets='5' showaddelement='no'>
   <b:widget id='HTML24' locked='true' title='SVG Icons' type='HTML' version='2' visible='true'>
@@ -1532,7 +1532,7 @@ width: 50%;
     <b:includable id='JetSocial'>
       <b:include name='JetWidgetTitle'/>
       <div class='widget-content social-media mb-3'>
-          <b:loop index='i' values='data:links' var='link'><a expr:aria-label='data:link.name' expr:class='&quot;mb-2 btn btn-sm jt-btn-light hover-btn-primary rounded-pill jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><b:class cond='data:i != data:links.size - 1' name='me-2'/><svg aria-hidden='true' class='jt-icon'><use expr:xlink:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop>
+          <b:loop index='i' values='data:links' var='link'><a expr:aria-label='&quot;Follow us on &quot; + data:link.name' expr:class='&quot;mb-2 btn btn-sm jt-btn-light hover-btn-primary rounded-pill jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><b:class cond='data:i != data:links.size - 1' name='me-2'/><svg aria-hidden='true' class='jt-icon'><use expr:xlink:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop>
       </div>
     </b:includable>
     <b:includable id='JetPopularPosts'>
@@ -1618,7 +1618,7 @@ width: 50%;
       <b:include name='JetWidgetTitle'/>
       <div class='widget-content follow-by-email'>
         <div class='mb-3'><data:content/></div>
-        <form action='https://api.follow.it/subscribe?pub=CQoJCcEXztieMrPUAQYKlNRPCjlhk9FW' method='post' target='_blank'><div class='input-group rounded-pill overflow-hidden border border-2 jt-border-light' style='max-width:400px'><input aria-label='Email Address' class='form-control fs-7 bg-transparent border-0 text-reset py-2' id='newsletter-email' name='email' placeholder='Email Address' required='required' type='email'/><button aria-label='Submit Button' class='btn py-0 border-0 text-reset fs-5' type='submit'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-mail'/></svg></button></div></form>
+        <form action='https://api.follow.it/subscribe?pub=CQoJCcEXztieMrPUAQYKlNRPCjlhk9FW' method='post' target='_blank'><div class='input-group rounded-pill overflow-hidden border border-2 jt-border-light' style='max-width:400px'><input aria-label='Email Address' class='form-control fs-7 bg-transparent border-0 text-reset py-2' id='newsletter-email' name='email' placeholder='Enter Email' required='required' type='email'/><button aria-label='Submit Button' class='btn py-0 border-0 text-reset fs-5' type='submit'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-mail'/></svg></button></div></form>
       </div>
     </b:includable>
     <b:includable id='JetLogo'>
@@ -1638,7 +1638,7 @@ width: 50%;
         </a>
       </b:if>
     </b:includable>
-    <b:includable id='JetMenu'>      
+    <b:includable id='JetMenu'>
     <b:class name='collapse navbar-collapse'/>
     <b:attr name='id' value='navbar'/>
 <label class='d-flex position-absolute fs-1 d-lg-none mt-4 me-4 top-0 end-0' for='navbar-toggle'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-close'/></svg></label>
@@ -1654,15 +1654,15 @@ width: 50%;
       </b:if>
       <b:if cond='data:title not contains &quot;#Dark&quot;'>
       <div class='d-flex align-self-stretch align-items-center ps-1' id='dark-header'>
-        <label aria-label='Toggle Dark Mode' class='p-2 jt-icon-center' id='dark-toggler'><svg aria-hidden='true' class='jt-icon'><use class='icon-light' xlink:href='#i-moon'/><use class='icon-dark' xlink:href='#i-sun'/></svg></label>
+        <label aria-label='Toggle Dark Mode' class='p-2 jt-icon-center' id='dark-toggler' role='button' tabindex='0'><svg aria-hidden='true' class='jt-icon'><use class='icon-light' xlink:href='#i-moon'/><use class='icon-dark' xlink:href='#i-sun'/></svg></label>
       </div>
       </b:if>
       <b:if cond='data:title not contains &quot;#Search&quot;'>
       <div class='d-flex align-self-stretch align-items-center position-md-relative' id='search-header'>
         <input class='d-none' id='search-toggle' type='checkbox'/>
-        <label aria-label='Toggle search' class='p-2 check-text-primary hover-text-primary jt-icon-center' for='search-toggle' id='search-toggler'><svg aria-hidden='true' class='fs-5 jt-icon'><use xlink:href='#i-search'/></svg></label>
+        <label aria-label='Toggle search' class='p-2 check-text-primary hover-text-primary jt-icon-center' for='search-toggle' id='search-toggler' role='button' tabindex='0'><svg aria-hidden='true' class='fs-5 jt-icon'><use xlink:href='#i-search'/></svg></label>
         <div class='dropdown-menu p-1 shadow-sm d-block-check'>
-          <form class='input-group' expr:action='data:blog.searchUrl' method='GET' target='_top'> 
+          <form class='input-group' expr:action='data:blog.searchUrl' method='GET' role='search' target='_top'>
             <input class='form-control fs-7 border-0 rounded-0 bg-transparent text-reset' expr:value='data:view.isSearch ? data:view.search.query : &quot;&quot;' id='search-input' name='q' placeholder='Enter your search' required='required' type='text'/>
             <input name='max-results' type='hidden' value='10'/>
             <button class='btn btn-sm fw-bold py-2 px-4 rounded-pill border-0 jt-btn-primary m-0' type='submit'>Search</button>
@@ -1671,7 +1671,7 @@ width: 50%;
       </div>
       </b:if>
       <div class='d-flex align-self-stretch align-items-center d-lg-none'>
-        <label aria-label='Toggle navigation' class='p-1 jt-icon-center hover-text-primary' for='navbar-toggle' id='navbar-toggler'><svg aria-hidden='true' class='fs-3 jt-icon'><use xlink:href='#i-menu'/></svg></label>
+        <label aria-label='Toggle navigation' class='p-1 jt-icon-center hover-text-primary' for='navbar-toggle' id='navbar-toggler' role='button' tabindex='0'><svg aria-hidden='true' class='fs-3 jt-icon'><use xlink:href='#i-menu'/></svg></label>
       </div>
     </b:includable>
     <b:includable id='JetCopyRight'>
@@ -1690,7 +1690,7 @@ width: 50%;
 <b:include data='post' name='JetPostMeta'/>
 <b:if cond='data:post.featuredImage'>
 <div class='item-thumbnail'>
-<a class='jt-bg-light d-block ratio ratio-16x9' expr:href='data:post.url.canonical' rel='bookmark'>  
+<a class='jt-bg-light d-block ratio ratio-16x9' expr:href='data:post.url.canonical' rel='bookmark'>
 <img expr:alt='data:post.title' expr:class='data:post.featuredImage.isYoutube ?  &quot;object-cover lazyload&quot; : &quot;lazyload&quot;' expr:data-src='data:post.featuredImage.isYoutube ? data:post.thumbnailUrl : data:post.featuredImage' loading='lazy' src='data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='/>
 </a>
 </div>
@@ -1847,7 +1847,7 @@ width: 50%;
     <a expr:href='data:blog.canonicalHomepageUrl' itemprop='item' rel='tag' title='Home'><span itemprop='name'>Home</span></a>
     <meta content='1' itemprop='position'/>
   </li>
-  <b:if cond='data:post.labels'>     
+  <b:if cond='data:post.labels'>
     <b:loop index='i' values='data:post.labels where (l =&gt; l.name not contains &quot;#&quot;) take data:skin.vars.maxLabel' var='label'>
       <li class='breadcrumb-item d-inline-block' itemprop='itemListElement' itemscope='itemscope' itemtype='https://schema.org/ListItem'>
         <a expr:href='data:label.url.canonical + &quot;?max-results=10&quot;' expr:title='data:label.name' itemprop='item' rel='tag'><span itemprop='name'><data:label.name/></span></a>
@@ -1907,7 +1907,7 @@ width: 50%;
 <span class='d-inline-block fw-light text-secondary fs-8'><data:commentLevel1.timestamp/></span>
 </div>
 <span expr:class='&quot;delete-comment &quot; + data:commentLevel1.adminClass'>
-<a aria-label='Delete' class='btn btn-sm jt-btn-light rounded-pill jt-icon-center' expr:href='data:commentLevel1.deleteUrl' rel='nofollow noopener noreferrer' target='_blank'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-close'/></svg></a>
+<a aria-label='Delete this comment' class='btn btn-sm jt-btn-light rounded-pill jt-icon-center' expr:href='data:commentLevel1.deleteUrl' rel='nofollow noopener noreferrer' target='_blank'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-close'/></svg></a>
 </span>
 </div>
 <div class='comment-content text-break fs-7 jt-bg-light p-3 rounded mb-3'><p class='mb-0'><b:eval expr='data:commentLevel1.body snippet { links: false }'/></p></div>
@@ -1935,7 +1935,7 @@ width: 50%;
 <span class='d-inline-block fw-light text-secondary fs-8'><data:commentLevel2.timestamp/></span>
 </div>
 <span expr:class='&quot;delete-comment &quot; + data:commentLevel2.adminClass'>
-<a aria-label='Delete' class='btn btn-sm jt-btn-light rounded-pill jt-icon-center' expr:href='data:commentLevel2.deleteUrl' rel='nofollow noopener noreferrer' target='_blank'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-close'/></svg></a>
+<a aria-label='Delete this comment' class='btn btn-sm jt-btn-light rounded-pill jt-icon-center' expr:href='data:commentLevel2.deleteUrl' rel='nofollow noopener noreferrer' target='_blank'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-close'/></svg></a>
 </span>
 </div>
 <div class='comment-content text-break fs-7 jt-bg-light p-3 rounded mb-3'><p class='mb-0'><b:eval expr='data:commentLevel2.body snippet { links: false }'/></p></div>
@@ -1947,7 +1947,7 @@ width: 50%;
 </b:if>
 </b:with>
 <div class='comment-actions'>
-<a class='comment-reply btn btn-sm jt-btn-light rounded-pill px-4' expr:data-comment-id='data:commentLevel1.id' expr:href='data:post.commentFormIframeSrc appendParams {skin: &quot;contempo&quot;,parentID: data:commentLevel1.id}' rel='nofollow noopener noreferrer' target='_blank'>Reply</a>
+<a aria-label='Reply to this comment' class='comment-reply btn btn-sm jt-btn-light rounded-pill px-4' expr:data-comment-id='data:commentLevel1.id' expr:href='data:post.commentFormIframeSrc appendParams {skin: &quot;contempo&quot;,parentID: data:commentLevel1.id}' rel='nofollow noopener noreferrer' target='_blank'>Reply</a>
 </div>
 </li>
 </b:loop>
@@ -2009,7 +2009,7 @@ width: 50%;
   &quot;datePublished&quot;: &quot;<data:post.date.iso8601/>&quot;,
   &quot;dateModified&quot;: &quot;<data:post.lastUpdated.iso8601/>&quot;
 }
-</script>   
+</script>
     </b:includable>
     <b:includable id='JetPost' var='post'>
 <article class='mb-5' id='single-content'>
@@ -2106,11 +2106,11 @@ width: 50%;
             <b:include data='post' name='JetPost'/>
             <b:include name='JetPagination'/>
             <b:include data='post' name='JetComments'/>
-            <b:include data='post' name='JetRelatedPost'/>            
+            <b:include data='post' name='JetRelatedPost'/>
             <b:elseif cond='data:view.isPage'/>
             <b:include data='post' name='JetPage'/>
             <b:include data='post' name='JetComments'/>
-          </b:if>          
+          </b:if>
         </b:loop>
      </b:if>
     </b:with>
@@ -2140,8 +2140,8 @@ width: 50%;
         </div>
       </form>
     </div>
-  	</b:includable>
-  	<b:includable id='JetImage'>
+	</b:includable>
+	<b:includable id='JetImage'>
       <b:include name='JetWidgetTitle'/>
       <div class='widget-content'>
         <div class='overflow-hidden position-relative jt-bg-white'>
@@ -2149,7 +2149,7 @@ width: 50%;
           <div class='bg-dark ratio ratio-4x3'>
             <img class='lazyload' expr:alt='data:caption' expr:data-src='data:sourceUrl' loading='lazy' src='data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='/>
             <b:tag class='image-content position-absolute d-flex justify-content-center align-items-center' cond='data:caption or data:link' expr:name='data:caption ? &quot;div&quot; : &quot;a&quot;'>
-              <b:attr cond='!data:caption' name='href' value='data:link'/> 
+              <b:attr cond='!data:caption' name='href' value='data:link'/>
               <b:attr cond='data:caption' name='style' value='background:linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, rgba(77, 77, 77, 0) 100%)'/>
               <b:tag class='py-2 px-4 jt-bg-white' cond='data:caption' expr:href='data:link' expr:name='data:link ? &quot;a&quot; : &quot;span&quot;'><b:class cond='data:caption and data:link' name='btn btn-sm jt-btn-light hover-btn-primary rounded-0'/><data:caption/></b:tag>
             </b:tag>
@@ -2202,7 +2202,7 @@ width: 50%;
     </b:includable>
   </b:defaultmarkup>
 </b:defaultmarkups>
-  
+
 <b:defaultmarkups>
   <b:defaultmarkup type='HTML,Text'>
     <b:includable id='main'>
@@ -2399,7 +2399,7 @@ width: 50%;
   <b:defaultmarkup type='ContactForm'>
     <b:includable id='main'>
       <b:include name='JetContactForm'/>
-    </b:includable>    
+    </b:includable>
     <b:includable id='content'/>
   </b:defaultmarkup>
   <b:defaultmarkup type='Image'>
