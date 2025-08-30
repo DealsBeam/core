@@ -1642,10 +1642,10 @@ width: 50%;
     <b:class name='collapse navbar-collapse'/>
     <b:attr name='id' value='navbar'/>
 <label class='d-flex position-absolute fs-1 d-lg-none mt-4 me-4 top-0 end-0' for='navbar-toggle'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-close'/></svg></label>
-<ul class='navbar-nav px-4 p-lg-0 container' itemscope='itemscope' itemtype='http://schema.org/SiteNavigationElement' role='menu'>
+<ul class='navbar-nav px-4 p-lg-0 container' itemscope='itemscope' itemtype='http://schema.org/SiteNavigationElement' role='menubar'>
   <b:loop index='i' values='data:links' var='link'>
     <b:switch var='data:link.target'>
-      <b:case value='#sub-start'/><input class='d-none' expr:id='&quot;sub-toggle-&quot; + data:i' type='checkbox'/><label class='dropdown-toggle' expr:for='&quot;sub-toggle-&quot; + data:i'/> &lt;ul class=&quot;dropdown-menu rounded-0&quot;&gt; &lt;li class=&quot;d-none&quot;&gt; <b:case value='#sub-end'/>&lt;/li&gt; &lt;/ul&gt; <b:default/><b:if cond='data:i gt 0'>&lt;/li&gt;</b:if>&lt;li class=&quot;menu-item&quot;&gt;<a class='nav-link' expr:href='data:link.target' itemprop='url' role='menuitem'><b:class cond='data:view.url.canonical == data:link.target or data:view.url.canonical == path(data:blog.canonicalHomepageUrl, data:link.target)' name='active'/><span itemprop='name'><data:link.name/></span></a></b:switch></b:loop>&lt;/li&gt;</ul>
+      <b:case value='#sub-start'/><input class='d-none' expr:id='&quot;sub-toggle-&quot; + data:i' type='checkbox'/><label aria-expanded='false' aria-haspopup='true' aria-label='Toggle submenu' class='dropdown-toggle' expr:for='&quot;sub-toggle-&quot; + data:i' role='button' tabindex='0'/> &lt;ul class=&quot;dropdown-menu rounded-0&quot; role=&quot;menu&quot;&gt; &lt;li class=&quot;d-none&quot; role=&quot;none&quot;&gt; <b:case value='#sub-end'/>&lt;/li&gt; &lt;/ul&gt; <b:default/><b:if cond='data:i gt 0'>&lt;/li&gt;</b:if>&lt;li class='menu-item' role='none presentation'><a class='nav-link' expr:href='data:link.target' itemprop='url' role='menuitem'><b:class cond='data:view.url.canonical == data:link.target or data:view.url.canonical == path(data:blog.canonicalHomepageUrl, data:link.target)' name='active'/><span itemprop='name'><data:link.name/></span></a></b:switch></b:loop>&lt;/li&gt;</ul>
     </b:includable>
     <b:includable id='JetSearch'>
       <b:class name='d-flex align-self-stretch align-items-center order-lg-1 ms-auto'/>
