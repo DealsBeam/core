@@ -1,0 +1,88 @@
+/*
+  Blogspot Theme Variables
+  These comments will be parsed by the build script to create <b:variable> tags.
+*/
+/* @variable name="Primary Text Color" group="Colors" type="color" default="#111827" */
+/* @variable name="Secondary Text Color" group="Colors" type="color" default="#6b7280" */
+/* @variable name="Background Color" group="Colors" type="color" default="#f9fafb" */
+/* @variable name="Accent Color" group="Colors" type="color" default="#3b82f6" */
+
+/* @variable name="Body Font" group="Fonts" type="font" default="sans-serif" */
+/* @variable name="Header Font" group="Fonts" type="font" default="serif" */
+
+:root {
+    --primary-color: #111827;
+    --secondary-color: #6b7280;
+    --background-color: #f9fafb;
+    --accent-color: #3b82f6;
+    --font-body: sans-serif;
+    --font-header: serif;
+}
+
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--primary-color);
+    background-color: var(--background-color);
+    line-height: 1.6;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 20px;
+}
+
+header h1 {
+    font-family: var(--font-header);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+article {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+article h2 {
+    font-family: var(--font-header);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+article h2 a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+article h2 a:hover {
+    color: var(--accent-color);
+}
+
+.post-meta {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.post-body {
+    font-size: 1.1rem;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}

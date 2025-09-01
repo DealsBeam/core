@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:version='2' class='v2' expr:dir='data:blog.languageDirection' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta charset='UTF-8'/>
+  <meta content='width=device-width, initial-scale=1.0' name='viewport'/>
+  <title><data:blog.pageTitle/></title>
+  <b:if cond='true'>
+    <b:variable name="Primary Text Color" description="Primary Text Color" group="Colors" type="color" default="#111827" value="#111827"/>
+  <b:variable name="Secondary Text Color" description="Secondary Text Color" group="Colors" type="color" default="#6b7280" value="#6b7280"/>
+  <b:variable name="Background Color" description="Background Color" group="Colors" type="color" default="#f9fafb" value="#f9fafb"/>
+  <b:variable name="Accent Color" description="Accent Color" group="Colors" type="color" default="#3b82f6" value="#3b82f6"/>
+  <b:variable name="Body Font" description="Body Font" group="Fonts" type="font" default="sans-serif" value="sans-serif"/>
+  <b:variable name="Header Font" description="Header Font" group="Fonts" type="font" default="serif" value="serif"/>
+  </b:if>
+  <b:skin><![CDATA[
+/*
+  Blogspot Theme Variables
+  These comments will be parsed by the build script to create <b:variable> tags.
+*/
+/* @variable name="Primary Text Color" group="Colors" type="color" default="#111827" */
+/* @variable name="Secondary Text Color" group="Colors" type="color" default="#6b7280" */
+/* @variable name="Background Color" group="Colors" type="color" default="#f9fafb" */
+/* @variable name="Accent Color" group="Colors" type="color" default="#3b82f6" */
+
+/* @variable name="Body Font" group="Fonts" type="font" default="sans-serif" */
+/* @variable name="Header Font" group="Fonts" type="font" default="serif" */
+
+:root {
+    --primary-color: #111827;
+    --secondary-color: #6b7280;
+    --background-color: #f9fafb;
+    --accent-color: #3b82f6;
+    --font-body: sans-serif;
+    --font-header: serif;
+}
+
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--primary-color);
+    background-color: var(--background-color);
+    line-height: 1.6;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 20px;
+}
+
+header h1 {
+    font-family: var(--font-header);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+article {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+article h2 {
+    font-family: var(--font-header);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+article h2 a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+article h2 a:hover {
+    color: var(--accent-color);
+}
+
+.post-meta {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.post-body {
+    font-size: 1.1rem;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+  ]]></b:skin>
+</head>
+<body>
+<header>
+        <b:widget id='Header1' type='Header' version='1'><b:includable id='main'><h1><data:title/></h1></b:includable></b:widget>
+        <p><data:description/></p>
+    </header>
+
+    <main>
+
+<b:section class='main' id='main-content' showaddelement='yes'>
+  <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2'>
+    <b:includable id='main'>
+      <b:loop values='data:posts' var='post'>
+        <article>
+          <h2><a expr:href='data:post.url'><data:post.title/></a></h2>
+          <p class='post-meta'>Published on <data:post.timestamp/></p>
+          <div class='post-body'>
+            <data:post.body/>
+          </div>
+        </article>
+      </b:loop>
+    </b:includable>
+  </b:widget>
+</b:section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 My Awesome Blog. Powered by Blogger.</p>
+    </footer>
+</body>
+</html>
