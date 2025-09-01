@@ -48,7 +48,7 @@ body {
     background-color: var(--background-color);
     line-height: 1.7;
     padding: 40px 20px;
-    max-width: 720px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
@@ -110,6 +110,140 @@ footer {
     font-size: 0.9rem;
 }
 
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    font-size: 1.1rem;
+}
+
+.pagination a {
+    color: var(--accent-color);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: #e2e8f0;
+    color: var(--primary-color);
+}
+
+/* Comments Section */
+.comments {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.comments h4 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+#comments-block .comment {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+#comments-block .comment-author {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+#comments-block .comment-body {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+#comment-editor {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+#comment-post-button {
+    padding: 10px 20px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+#comment-post-button:hover {
+    opacity: 0.9;
+}
+
+/* Post Footer / Labels */
+.post-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.post-labels-title {
+    font-weight: 700;
+    margin-right: 10px;
+}
+
+.post-footer a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.post-footer a:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+/* Main Layout */
+.main-wrapper {
+    display: flex;
+    gap: 40px;
+}
+
+main {
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar {
+    flex-basis: 280px;
+    flex-shrink: 0;
+}
+
+/* Social Share Buttons */
+.post-share-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.post-share-buttons a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+}
+
+.post-share-buttons a:hover {
+    background-color: #e2e8f0;
+    color: var(--accent-color);
+}
+
   ]]></b:skin>
 </head>
 <body>
@@ -126,7 +260,8 @@ footer {
 </b:section>
 
 
-    <main>
+    <div class='main-wrapper'>
+      <main>
 
 <b:section class='main' id='main-content' showaddelement='yes'>
   <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2'>
@@ -138,13 +273,81 @@ footer {
           <div class='post-body'>
             <data:post.body/>
           </div>
+          <div class='post-footer'>
+            <div class='post-labels'>
+              <b:if cond='data:post.labels'>
+                <span class='post-labels-title'>Labels:</span>
+                <b:loop values='data:post.labels' var='label'>
+                  <a expr:href='data:label.url' rel='tag'><data:label.name/></a><b:if cond='data:label.isLast != "true"'>, </b:if>
+                </b:loop>
+              </b:if>
+            </div>
+            <div class='post-share-buttons'>
+                <a class='share-twitter' expr:href='&quot;https://twitter.com/intent/tweet?text=&quot; + data:post.title + &quot;&amp;url=&quot; + data:post.url' target='_blank'>Share on Twitter</a>
+                <a class='share-facebook' expr:href='&quot;https://www.facebook.com/sharer/sharer.php?u=&quot; + data:post.url' target='_blank'>Share on Facebook</a>
+                <a class='share-email' expr:href='&quot;mailto:?subject=&quot; + data:post.title + &quot;&amp;body=&quot; + data:post.url' target='_blank'>Share via Email</a>
+            </div>
+          </div>
+          <b:if cond='data:post.allowComments'>
+            <b:include data='post' name='postComments'/>
+          </b:if>
         </article>
       </b:loop>
+      <b:include name='nextprev'/>
+    </b:includable>
+    <b:includable id='nextprev'>
+      <div class='pagination'>
+        <b:if cond='data:newerPageUrl'>
+          <a class='pagination-newer' expr:href='data:newerPageUrl'>&#171; Newer Posts</a>
+        </b:if>
+        <b:if cond='data:olderPageUrl'>
+          <a class='pagination-older' expr:href='data:olderPageUrl'>Older Posts &#187;</a>
+        </b:if>
+      </div>
+    </b:includable>
+    <b:includable id='postComments' var='post'>
+      <div class='comments' id='comments'>
+        <b:if cond='data:post.allowComments'>
+          <b:if cond='data:post.numComments != 0'>
+            <h4><data:post.numComments/> Comments:</h4>
+          </b:if>
+          <div id='comments-block'>
+            <b:loop values='data:post.comments' var='comment'>
+              <div class='comment'>
+                <div class='comment-author'>
+                  <b:if cond='data:comment.authorUrl'>
+                    <a expr:href='data:comment.authorUrl' rel='nofollow'><data:comment.author/></a>
+                  <b:else/>
+                    <data:comment.author/>
+                  </b:if>
+                </div>
+                <div class='comment-body'>
+                  <p><data:comment.body/></p>
+                </div>
+              </div>
+            </b:loop>
+          </div>
+        </b:if>
+        <div class='comment-form'>
+          <b:if cond='data:post.embedCommentForm'>
+            <b:include data='post' name='comment-form'/>
+          <b:else/>
+            <a expr:href='data:post.addCommentUrl' target='_blank'>Post a Comment</a>
+          </b:if>
+        </div>
+      </div>
     </b:includable>
   </b:widget>
 </b:section>
 
-    </main>
+      </main>
+      <aside class='sidebar'>
+
+<b:section class='sidebar' id='sidebar' showaddelement='yes'>
+</b:section>
+
+      </aside>
+    </div>
 
     <footer>
         <p>&#169; 2025 My Awesome Blog. Powered by Blogger.</p>

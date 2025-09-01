@@ -65,8 +65,69 @@ def create_build_script():
           <div class='post-body'>
             <data:post.body/>
           </div>
+          <div class='post-footer'>
+            <div class='post-labels'>
+              <b:if cond='data:post.labels'>
+                <span class='post-labels-title'>Labels:</span>
+                <b:loop values='data:post.labels' var='label'>
+                  <a expr:href='data:label.url' rel='tag'><data:label.name/></a><b:if cond='data:label.isLast != "true"'>, </b:if>
+                </b:loop>
+              </b:if>
+            </div>
+            <div class='post-share-buttons'>
+                <a class='share-twitter' expr:href='&quot;https://twitter.com/intent/tweet?text=&quot; + data:post.title + &quot;&amp;url=&quot; + data:post.url' target='_blank'>Share on Twitter</a>
+                <a class='share-facebook' expr:href='&quot;https://www.facebook.com/sharer/sharer.php?u=&quot; + data:post.url' target='_blank'>Share on Facebook</a>
+                <a class='share-email' expr:href='&quot;mailto:?subject=&quot; + data:post.title + &quot;&amp;body=&quot; + data:post.url' target='_blank'>Share via Email</a>
+            </div>
+          </div>
+          <b:if cond='data:post.allowComments'>
+            <b:include data='post' name='postComments'/>
+          </b:if>
         </article>
       </b:loop>
+      <b:include name='nextprev'/>
+    </b:includable>
+    <b:includable id='nextprev'>
+      <div class='pagination'>
+        <b:if cond='data:newerPageUrl'>
+          <a class='pagination-newer' expr:href='data:newerPageUrl'>&#171; Newer Posts</a>
+        </b:if>
+        <b:if cond='data:olderPageUrl'>
+          <a class='pagination-older' expr:href='data:olderPageUrl'>Older Posts &#187;</a>
+        </b:if>
+      </div>
+    </b:includable>
+    <b:includable id='postComments' var='post'>
+      <div class='comments' id='comments'>
+        <b:if cond='data:post.allowComments'>
+          <b:if cond='data:post.numComments != 0'>
+            <h4><data:post.numComments/> Comments:</h4>
+          </b:if>
+          <div id='comments-block'>
+            <b:loop values='data:post.comments' var='comment'>
+              <div class='comment'>
+                <div class='comment-author'>
+                  <b:if cond='data:comment.authorUrl'>
+                    <a expr:href='data:comment.authorUrl' rel='nofollow'><data:comment.author/></a>
+                  <b:else/>
+                    <data:comment.author/>
+                  </b:if>
+                </div>
+                <div class='comment-body'>
+                  <p><data:comment.body/></p>
+                </div>
+              </div>
+            </b:loop>
+          </div>
+        </b:if>
+        <div class='comment-form'>
+          <b:if cond='data:post.embedCommentForm'>
+            <b:include data='post' name='comment-form'/>
+          <b:else/>
+            <a expr:href='data:post.addCommentUrl' target='_blank'>Post a Comment</a>
+          </b:if>
+        </div>
+      </div>
     </b:includable>
   </b:widget>
 </b:section>
@@ -101,6 +162,14 @@ def create_build_script():
 """
     # Replace the header placeholder with the valid section
     body_content = body_content.replace('<!-- HEADER_SECTION -->', header_section)
+
+    # Define the sidebar section
+    sidebar_section = """
+<b:section class='sidebar' id='sidebar' showaddelement='yes'>
+</b:section>
+"""
+    # Replace the sidebar placeholder
+    body_content = body_content.replace('<!-- SIDEBAR_SECTION -->', sidebar_section)
 
     # Generate <b:variable> tags from CSS comments
     variables = parse_theme_variables(css_content)
