@@ -132,7 +132,7 @@ footer {
     </main>
 
     <footer>
-        <p>&copy; 2025 My Awesome Blog. Powered by Blogger.</p>
+        <p>&#169; 2025 My Awesome Blog. Powered by Blogger.</p>
     </footer>
 </body>
 </html>
