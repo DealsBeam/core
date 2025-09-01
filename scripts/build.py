@@ -86,9 +86,21 @@ def create_build_script():
         body_content
     )
 
-    # Replace other simple placeholders with Blogspot data tags
-    body_content = body_content.replace('<h1><!-- BLOG_TITLE --></h1>', "<b:widget id='Header1' type='Header' version='1'><b:includable id='main'><h1><data:title/></h1></b:includable></b:widget>")
-    body_content = body_content.replace('<p><!-- BLOG_DESCRIPTION --></p>', '<p><data:description/></p>')
+    # Define the valid header section with the widget nested inside
+    header_section = """
+<b:section class='header' id='header' maxwidgets='1' showaddelement='no'>
+  <b:widget id='Header1' locked='true' title='Blog Title' type='Header' version='2'>
+    <b:includable id='main'>
+      <div class='header-inner'>
+        <h1><a expr:href='data:blog.homepageUrl'><data:title/></a></h1>
+        <p><data:description/></p>
+      </div>
+    </b:includable>
+  </b:widget>
+</b:section>
+"""
+    # Replace the header placeholder with the valid section
+    body_content = body_content.replace('<!-- HEADER_SECTION -->', header_section)
 
     # Generate <b:variable> tags from CSS comments
     variables = parse_theme_variables(css_content)
