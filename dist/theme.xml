@@ -106,10 +106,18 @@ footer {
   ]]></b:skin>
 </head>
 <body>
-<header>
-        <b:widget id='Header1' type='Header' version='1'><b:includable id='main'><h1><data:title/></h1></b:includable></b:widget>
+
+<b:section class='header' id='header' maxwidgets='1' showaddelement='no'>
+  <b:widget id='Header1' locked='true' title='Blog Title' type='Header' version='2'>
+    <b:includable id='main'>
+      <div class='header-inner'>
+        <h1><a expr:href='data:blog.homepageUrl'><data:title/></a></h1>
         <p><data:description/></p>
-    </header>
+      </div>
+    </b:includable>
+  </b:widget>
+</b:section>
+
 
     <main>
 
