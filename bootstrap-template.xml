@@ -26,7 +26,7 @@
         </b:widget>
       </b:section>
       <button aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation' class='navbar-toggler' data-bs-target='#navbarNav' data-bs-toggle='collapse' type='button'>
-        <span class='navbar-toggler-icon'/>
+        <span class='navbar-toggler-icon'></span>
       </button>
       <div class='collapse navbar-collapse' id='navbarNav'>
         <b:section class='ms-auto' id='navbar' maxwidgets='1' showaddelement='yes'>
@@ -72,7 +72,7 @@
                   <b:if cond='data:view.isSingleItem'>
                     <data:post.body/>
                   <b:else/>
-                    <b:eval expr='data:post.body snippet { length: 250, links: false, linebreaks: true }'/>
+                    <b:eval expr='data:post.snippets.long ? data:post.snippets.long : data:post.body snippet { length: 250, links: false, linebreaks: true }'/>
                     <div class='mt-2'>
                       <a class='btn btn-primary btn-sm' expr:href='data:post.url'>Read More</a>
                     </div>
@@ -98,9 +98,9 @@
     </div>
     <div class="col-md-4">
       <b:section class='sidebar' id='sidebar' showaddelement='yes'>
-        <b:widget id='Search1' locked='false' title='Search This Blog' type='Search' version='1'/>
-        <b:widget id='PopularPosts1' locked='false' title='Popular Posts' type='PopularPosts' version='1'/>
-        <b:widget id='BlogArchive1' locked='false' title='Blog Archive' type='BlogArchive' version='1'/>
+        <b:widget id='Search1' locked='false' type='Search' version='1'/>
+        <b:widget id='PopularPosts1' locked='false' type='PopularPosts' version='1'/>
+        <b:widget id='BlogArchive1' locked='false' type='BlogArchive' version='1'/>
       </b:section>
     </div>
   </div>
@@ -126,5 +126,41 @@
   </div>
 </footer>
 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'/>
+<b:defaultmarkups>
+  <b:defaultmarkup type='Search'>
+    <b:includable id='main'>
+      <div class='card mb-4'>
+        <div class='card-header'><data:title/></div>
+        <div class='card-body'>
+          <b:include name='content'/>
+        </div>
+      </div>
+    </b:includable>
+  </b:defaultmarkup>
+  <b:defaultmarkup type='PopularPosts'>
+    <b:includable id='main'>
+      <div class='card mb-4'>
+        <div class='card-header'><data:title/></div>
+        <div class='card-body'>
+          <ul>
+          <b:loop values='data:posts' var='post'>
+            <li><a expr:href='data:post.url'><data:post.title/></a></li>
+          </b:loop>
+          </ul>
+        </div>
+      </div>
+    </b:includable>
+  </b:defaultmarkup>
+  <b:defaultmarkup type='BlogArchive'>
+    <b:includable id='main'>
+      <div class='card mb-4'>
+        <div class='card-header'><data:title/></div>
+        <div class='card-body'>
+          <b:include name='content'/>
+        </div>
+      </div>
+    </b:includable>
+  </b:defaultmarkup>
+</b:defaultmarkups>
 </body>
 </html>
