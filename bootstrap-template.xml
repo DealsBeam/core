@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:css='false' b:js='false' b:defaultwidgetversion='2' b:layoutsVersion='3'>
+<b:attr name='xmlns' value=''/>
+<b:attr name='xmlns:b' value=''/>
+<b:attr name='xmlns:expr' value=''/>
+<b:attr name='xmlns:data' value=''/>
+<head>
+<title><data:blog.pageTitle/></title>
+<meta content='width=device-width, initial-scale=1' name='viewport'/>
+<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css' rel='stylesheet'/>
+<b:skin/>
+</head>
+<body>
+<header class="bg-light border-bottom">
+  <div class="container">
+    <b:section class='header' id='header' maxwidgets='1' showaddelement='no'>
+      <b:widget id='Header1' locked='true' title='Blog Title' type='Header' version='1'>
+        <b:includable id='main'>
+          <a expr:href='data:blog.homepageUrl' style='text-decoration: none; color: inherit;'>
+            <h1 class='my-4'><data:title/></h1>
+          </a>
+        </b:includable>
+      </b:widget>
+    </b:section>
+  </div>
+</header>
+<main class="container my-4">
+  <b:section class='main' id='main' showaddelement='yes'>
+    <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='1'>
+      <b:includable id='main'>
+        <b:loop values='data:posts' var='post'>
+          <div class='card mb-4'>
+            <div class='card-body'>
+              <h2 class='card-title'><a expr:href='data:post.url'><data:post.title/></a></h2>
+              <div class='card-text'><data:post.body/></div>
+            </div>
+          </div>
+        </b:loop>
+      </b:includable>
+    </b:widget>
+  </b:section>
+</main>
+<footer class="bg-light border-top mt-auto py-3">
+  <div class="container text-center">
+    <b:section class='footer' id='footer' maxwidgets='1' showaddelement='no'>
+      <b:widget id='Attribution1' locked='true' title='' type='Attribution' version='1'/>
+    </b:section>
+  </div>
+</footer>
+<script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'/>
+</body>
+</html>
