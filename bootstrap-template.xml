@@ -43,6 +43,11 @@ a {
   color: $(link.color);
 }
 
+header {
+  position: relative;
+  z-index: 1030;
+}
+
 /* Dark Mode Styles
 ----------------------------------------------- */
 .dark-mode body {
