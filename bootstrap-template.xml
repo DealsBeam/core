@@ -1,21 +1,112 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
-<html b:css='false' b:js='false' b:defaultwidgetversion='2' b:layoutsVersion='3'>
-<b:attr name='xmlns' value=''/>
-<b:attr name='xmlns:b' value=''/>
-<b:attr name='xmlns:expr' value=''/>
-<b:attr name='xmlns:data' value=''/>
+<html b:version='2' class='v2' expr:dir='data:blog.languageDirection' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
 <head>
 <title><data:blog.pageTitle/></title>
 <meta content='width=device-width, initial-scale=1' name='viewport'/>
+<!-- Bootstrap CSS -->
 <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css' rel='stylesheet'/>
+<!-- Bootstrap Icons -->
 <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css' rel='stylesheet'/>
-<b:skin/>
+<!-- LazySizes for image lazy loading -->
+<script async='' src='https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js'/>
+
+<!-- Blogger Theme Skin -->
+<b:skin><![CDATA[
+/*
+* Bootstrap Blogger Theme - Spotlight Dark Redesign
+* --------------------------------------------------
+* @version 2.0
+* @author Jules
+*/
+
+/* Variable definitions for Theme Designer
+----------------------------------------------- */
+<Group description="Theme Colors" selector="body">
+  <Variable name="body.background.color" description="Background Color" type="color" default="#1a1a1a" value="#1a1a1a"/>
+  <Variable name="body.text.color" description="Text Color" type="color" default="#f8f9fa" value="#f8f9fa"/>
+  <Variable name="link.color" description="Link Color" type="color" default="#ff4500" value="#ff4500"/>
+  <Variable name="header.background.color" description="Header Background Color" type="color" default="#212529" value="#212529"/>
+  <Variable name="card.background.color" description="Card Background Color" type="color" default="#212529" value="#212529"/>
+  <Variable name="card.border.color" description="Card Border Color" type="color" default="#333" value="#333"/>
+</Group>
+<Group description="Fonts" selector="body">
+    <Variable name="body.font" description="Body Font" type="font" default="normal normal 16px 'Helvetica Neue', Arial, sans-serif" value="normal normal 16px 'Helvetica Neue', Arial, sans-serif"/>
+</Group>
+
+/* Base Styles
+----------------------------------------------- */
+body {
+  background-color: $(body.background.color);
+  color: $(body.text.color);
+  font: $(body.font);
+}
+
+a {
+  color: $(link.color);
+}
+
+header {
+  position: relative;
+  z-index: 1030;
+  background-color: $(header.background.color) !important;
+}
+
+.card {
+    background-color: $(card.background.color);
+    border-color: $(card.border.color);
+}
+
+.bg-light {
+    background-color: $(header.background.color) !important;
+}
+
+.text-muted {
+    color: #aaa !important;
+}
+
+/* Sidebar Widget Styles */
+.widget {
+    margin-bottom: 2rem;
+}
+
+.widget-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid $(link.color);
+    padding-bottom: 0.5rem;
+}
+
+.widget-content {
+    background-color: $(card.background.color);
+    padding: 1.5rem;
+    border-radius: 0.25rem;
+}
+
+]]></b:skin>
+
+<!-- This is required for the Blogger layout editor to work correctly. -->
+<b:template-skin>
+  <![CDATA[
+    body#layout .section {
+      margin: 0;
+      padding: 10px;
+      border: 1px dashed #ccc;
+    }
+    body#layout .section .widget {
+      margin: 0;
+      padding: 10px;
+      border: 1px solid #f0f0f0;
+    }
+  ]]>
+</b:template-skin>
 </head>
 <body>
+<!-- Header and Navigation Bar -->
 <header class="bg-light border-bottom">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
+      <!-- Blog Title -->
       <b:section class='header' id='header' maxwidgets='1' showaddelement='no'>
         <b:widget id='Header1' locked='true' title='Blog Title' type='Header' version='1'>
           <b:includable id='main'>
@@ -25,106 +116,459 @@
           </b:includable>
         </b:widget>
       </b:section>
+      <!-- Mobile Navigation Toggle -->
       <button aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation' class='navbar-toggler' data-bs-target='#navbarNav' data-bs-toggle='collapse' type='button'>
-        <span class='navbar-toggler-icon'/>
+        <span class='navbar-toggler-icon'></span>
       </button>
+      <!-- Navigation Menu -->
       <div class='collapse navbar-collapse' id='navbarNav'>
-        <b:section class='ms-auto' id='navbar' maxwidgets='1' showaddelement='yes'>
+        <b:section class='mx-auto' id='navbar' maxwidgets='1' showaddelement='yes'>
           <b:widget id='LinkList1' locked='false' title='Menu' type='LinkList' version='1'>
             <b:includable id='main'>
               <ul class='navbar-nav'>
                 <b:loop values='data:links' var='link'>
-                  <li class='nav-item'><a class='nav-link' expr:href='data:link.target'><data:link.name/></a></li>
+                  <b:if cond='data:link.target == &quot;#sub-start&quot;'>
+                    <li class='nav-item dropdown'>
+                      <a class='nav-link dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                        <data:link.name/>
+                      </a>
+                      <ul class='dropdown-menu'>
+                  <b:else if='data:link.target == &quot;#sub-end&quot;'/>
+                      </ul>
+                    </li>
+                  <b:else/>
+                    <b:if cond='data:link.target.startsWith(&quot;http&quot;)'>
+                        <li><a class='dropdown-item' expr:href='data:link.target'><data:link.name/></a></li>
+                    <b:else/>
+                        <li class='nav-item'><a class='nav-link' expr:href='data:link.target'><data:link.name/></a></li>
+                    </b:if>
+                  </b:if>
+                </b:loop>
+              </ul>
+            </b:includable>
+          </b:widget>
+        </b:section>
+        <b:section class='ms-auto' id='search' maxwidgets='1' showaddelement='yes'>
+            <b:widget id='HTML100' locked='false' title='Search' type='HTML' version='1'>
+                <b:includable id='main'>
+                    <div class='d-flex align-items-center'>
+                        <a class='nav-link' href='javascript:void(0);' id='search-button'>
+                            <i class='bi bi-search'></i>
+                        </a>
+                    </div>
+                    <div class='d-none' id='search-form-container'>
+                        <form expr:action='data:blog.searchUrl' method='get' class='d-flex'>
+                            <input class='form-control me-2' name='q' placeholder='Search...' type='text'/>
+                            <button class='btn btn-outline-primary' type='submit'>Search</button>
+                        </form>
+                    </div>
+                    <script>
+                    // <![CDATA[
+                        document.getElementById('search-button').addEventListener('click', function() {
+                            var searchForm = document.getElementById('search-form-container');
+                            searchForm.classList.toggle('d-none');
+                        });
+                    // ]]>
+                    </script>
+                </b:includable>
+            </b:widget>
+        </b:section>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Featured Post Section -->
+<div class='container'>
+  <b:section class='featured-post' id='featured-post' maxwidgets='1' showaddelement='yes'>
+    <b:widget id='HTML3' locked='false' title='Featured Post' type='HTML' version='1'>
+      <b:includable id='main'>
+        <!-- The user provides the URL of the featured post in this div -->
+        <div id='featured-post-container' class='hero-post'>
+          <data:content/>
+        </div>
+        <script>
+        // <![CDATA[
+          // --- Featured Post Script ---
+          // Fetches and displays a featured post from a given URL.
+
+          var featuredPostContainer = document.getElementById('featured-post-container');
+          if (featuredPostContainer) {
+            // Get the URL from the widget's content.
+            var featuredPostUrl = featuredPostContainer.innerText.trim();
+            if (featuredPostUrl) {
+              // Construct the JSON-in-script URL.
+              var url = featuredPostUrl.split('?')[0] + '?alt=json-in-script&callback=showFeaturedPost';
+              // Create a script tag to fetch the data.
+              var script = document.createElement('script');
+              script.src = url;
+              document.body.appendChild(script);
+            }
+          }
+
+          // Callback function to render the featured post.
+          function showFeaturedPost(json) {
+            var entry = json.entry;
+            var postUrl = featuredPostUrl;
+            var postTitle = entry.title.$t;
+            var postSnippet = ("summary" in entry) ? entry.summary.$t.replace(/<[^>]*>/g, "").substring(0, 250) + '...' : "";
+            var postImage = ("media$thumbnail" in entry) ? entry.media$thumbnail.url.replace('/s72-c/', '/s1600/') : "https://via.placeholder.com/800x400";
+
+            var html = '<div class="card flex-md-row mb-4 shadow-sm h-md-250">';
+            html += '<img data-src="' + postImage + '" class="card-img-left flex-auto d-none d-md-block lazyload" style="width: 50%; object-fit: cover;" alt="' + postTitle + '"/>';
+            html += '<div class="card-body d-flex flex-column align-items-start">';
+            html += '<h2 class="mb-0"><a class="text-light" href="' + postUrl + '">' + postTitle + '</a></h2>';
+            html += '<div class="mb-1 text-muted">' + new Date(entry.published.$t).toLocaleDateString() + '</div>';
+            html += '<p class="card-text mb-auto">' + postSnippet + '</p>';
+            html += '<a class="stretched-link" href="' + postUrl + '">Continue reading</a>';
+            html += '</div>';
+            html += '</div>';
+
+            if (featuredPostContainer) {
+                featuredPostContainer.innerHTML = html;
+            }
+          }
+        // ]]>
+        </script>
+      </b:includable>
+    </b:widget>
+  </b:section>
+</div>
+
+<!-- Main Content Area -->
+<!-- Check if the current page is an error page -->
+<b:if cond='data:view.isError'>
+  <!-- Display a 404 error message -->
+  <div class='container my-4 text-center'>
+    <h1 class='display-1'>404</h1>
+    <h2>Page Not Found</h2>
+    <p>Sorry, the page you are looking for does not exist.</p>
+    <a class='btn btn-primary' expr:href='data:blog.homepageUrl'>Go to Homepage</a>
+  </div>
+<b:else/>
+  <!-- Display the main content and sidebar -->
+  <main class='container my-4'>
+    <div class='row'>
+      <!-- Blog Posts Column -->
+      <div class='col-md-8'>
+        <b:section class='main' id='main' showaddelement='yes'>
+          <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='1'>
+            <b:includable id='main'>
+              <div class='row row-cols-1 row-cols-md-2 g-4' id='posts-container'>
+                <b:loop values='data:posts' var='post'>
+                    <div class='col'>
+                        <b:include data='post' name='post'/>
+                    </div>
+                </b:loop>
+              </div>
+              <div class='text-center mt-4' id='load-more-container'>
+                <b:if cond='data:posts.nextPageUrl'>
+                  <a class='btn btn-primary' expr:href='data:posts.nextPageUrl' id='load-more-button'>Load More Posts</a>
+                </b:if>
+              </div>
+              <b:if cond='!data:view.isHomepage'>
+                <b:include name='nextprev'/>
+              </b:if>
+            </b:includable>
+            <b:includable id='post' var='post'>
+              <div class='card h-100'>
+                <a expr:href='data:post.url'>
+                    <b:if cond='data:post.firstImageUrl'>
+                        <img class='card-img-top lazyload' expr:data-src='data:post.firstImageUrl' alt='...'/>
+                    <b:else/>
+                        <img class='card-img-top lazyload' data-src='https://via.placeholder.com/700x350' alt='...'/>
+                    </b:if>
+                </a>
+                <div class='card-body'>
+                  <h2 class='card-title h5'><a expr:href='data:post.url'><data:post.title/></a></h2>
+                  <p class='card-text text-muted fs-sm'>
+                    <span class='me-2'><i class='bi bi-person'/> <data:post.author/></span>
+                    <span class='me-2'><i class='bi bi-calendar'/> <data:post.timestamp/></span>
+                  </p>
+                  <p class='card-text'><b:eval expr='data:post.snippets.long ? data:post.snippets.long : data:post.body snippet { length: 150, links: false, linebreaks: true }'/></p>
+                </div>
+                <div class='card-footer'>
+                    <a class='btn btn-primary btn-sm' expr:href='data:post.url'>Read More</a>
+                </div>
+              </div>
+            </b:includable>
+          </b:widget>
+        </b:section>
+      </div>
+      <!-- Sidebar Column -->
+      <div class='col-md-4'>
+        <b:section class='sidebar' id='sidebar' showaddelement='yes'>
+          <!-- Search Widget -->
+          <b:widget id='HTML2' locked='false' title='Search' type='HTML' version='1'>
+            <b:includable id='main'>
+              <div class='widget'>
+                <h4 class='widget-title'><data:title/></h4>
+                <div class='widget-content'>
+                  <form expr:action='data:blog.searchUrl' method='get'>
+                    <div class='input-group'>
+                      <input class='form-control' name='q' placeholder='Search...' type='text'/>
+                      <button class='btn btn-outline-secondary' type='submit'><i class='bi bi-search'/></button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </b:includable>
+          </b:widget>
+          <!-- Recent Posts Widget -->
+          <b:widget id='HTML4' locked='false' title='Recent Posts' type='HTML' version='1'>
+            <b:includable id='main'>
+              <div class='widget'>
+                <h4 class='widget-title'><data:title/></h4>
+                <div class='widget-content'>
+                  <div id='recent-posts-container'></div>
+                  <script>
+                  // <![CDATA[
+                    // --- Recent Posts Script ---
+                    // Fetches and displays the 5 most recent posts.
+
+                    var recentPostsContainer = document.getElementById('recent-posts-container');
+                    if (recentPostsContainer) {
+                        var url = '/feeds/posts/default?alt=json-in-script&max-results=5&callback=showRecentPostsWidget';
+                        var script = document.createElement('script');
+                        script.src = url;
+                        document.body.appendChild(script);
+                    }
+
+                    // Callback function to render the recent posts.
+                    function showRecentPostsWidget(json) {
+                      if (!recentPostsContainer) return;
+                      for (var i = 0; i < json.feed.entry.length; i++) {
+                        var entry = json.feed.entry[i];
+                        var postUrl;
+                        for (var j = 0; j < entry.link.length; j++) {
+                          if (entry.link[j].rel == 'alternate') {
+                            postUrl = entry.link[j].href;
+                            break;
+                          }
+                        }
+                        var postTitle = entry.title.$t;
+                        var postSnippet = ("summary" in entry) ? entry.summary.$t.replace(/<[^>]*>/g, "").substring(0, 100) + '...' : "";
+                        var postImage = ("media$thumbnail" in entry) ? entry.media$thumbnail.url : "https://via.placeholder.com/150";
+
+                        var html = '<div class="d-flex mb-3">';
+                        html += '<div class="flex-shrink-0">';
+                        html += '<img data-src="' + postImage + '" class="lazyload" style="width: 80px; height: 80px; object-fit: cover;" alt="' + postTitle + '"/>';
+                        html += '</div>';
+                        html += '<div class="flex-grow-1 ms-3">';
+                        html += '<h5><a href="' + postUrl + '">' + postTitle + '</a></h5>';
+                        html += '<p>' + postSnippet + '</p>';
+                        html += '</div>';
+                        html += '</div>';
+                        recentPostsContainer.innerHTML += html;
+                      }
+                    }
+                  // ]]>
+                  </script>
+                </div>
+              </div>
+            </b:includable>
+          </b:widget>
+          <!-- Popular Posts Widget -->
+          <b:widget id='PopularPosts1' locked='false' type='PopularPosts' version='1'/>
+          <!-- Archive Widget -->
+          <b:widget id='BlogArchive1' locked='false' type='BlogArchive' version='1'/>
+          <!-- Advertisement Widget -->
+          <b:widget id='HTML5' locked='false' title='Advertisement' type='HTML' version='1'>
+            <b:includable id='main'>
+              <div class='widget'>
+                <h4 class='widget-title'><data:title/></h4>
+                <div class='widget-content'>
+                  <div class='lazy-ad' style='width: 300px; height: 250px;'>
+                    <!-- Ad will be loaded here -->
+                  </div>
+                </div>
+              </div>
+            </b:includable>
+          </b:widget>
+        </b:section>
+      </div>
+    </div>
+  </main>
+</b:if>
+
+<!-- Footer -->
+<footer class="bg-dark text-light mt-auto pt-5">
+  <div class="container">
+    <div class="row">
+      <!-- Footer Column 1 -->
+      <div class="col-md-4">
+        <b:section class='footer-col-1' id='footer-col-1' showaddelement='yes'>
+          <b:widget id='HTML20' locked='false' title='About Us' type='HTML' version='1'>
+            <b:includable id='main'>
+              <h5 class="text-uppercase"><data:title/></h5>
+              <p><data:content/></p>
+            </b:includable>
+          </b:widget>
+        </b:section>
+      </div>
+      <!-- Footer Column 2 -->
+      <div class="col-md-4">
+        <b:section class='footer-col-2' id='footer-col-2' showaddelement='yes'>
+          <b:widget id='LinkList20' locked='false' title='Categories' type='LinkList' version='1'>
+            <b:includable id='main'>
+              <h5 class="text-uppercase"><data:title/></h5>
+              <ul class="list-unstyled">
+                <b:loop values='data:links' var='link'>
+                  <li><a expr:href='data:link.target' class="text-light"><data:link.name/></a></li>
                 </b:loop>
               </ul>
             </b:includable>
           </b:widget>
         </b:section>
       </div>
-    </div>
-  </nav>
-</header>
-<main class="container my-4">
-  <div class="row">
-    <div class="col-md-8">
-      <b:section class='main' id='main' showaddelement='yes'>
-        <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='1'>
-          <b:includable id='main'>
-            <b:loop values='data:posts' var='post'>
-              <b:include data='post' name='post'/>
-            </b:loop>
-          </b:includable>
-          <b:includable id='post' var='post'>
-            <div class='card mb-4'>
-              <div class='card-body'>
-                <h2 class='card-title'>
-                  <b:if cond='data:view.isSingleItem'>
-                    <data:post.title/>
-                  <b:else/>
-                    <a expr:href='data:post.url'><data:post.title/></a>
-                  </b:if>
-                </h2>
-                <div class='card-subtitle mb-2 text-muted'>
-                  <span class='me-2'><i class='bi bi-person'/> <data:post.author/></span>
-                  <span class='me-2'><i class='bi bi-calendar'/> <data:post.timestamp/></span>
-                </div>
-                <div class='card-text'>
-                  <b:if cond='data:view.isSingleItem'>
-                    <data:post.body/>
-                  <b:else/>
-                    <b:eval expr='data:post.body snippet { length: 250, links: false, linebreaks: true }'/>
-                    <div class='mt-2'>
-                      <a class='btn btn-primary btn-sm' expr:href='data:post.url'>Read More</a>
-                    </div>
-                  </b:if>
-                </div>
-                <div class='mt-3'>
-                  <b:loop values='data:post.labels' var='label'>
-                    <a class='btn btn-outline-secondary btn-sm me-1' expr:href='data:label.url'><data:label.name/></a>
-                  </b:loop>
-                </div>
-              </div>
-            </div>
-            <b:if cond='data:view.isSingleItem'>
-              <div class='card my-4'>
-                <div class='card-body'>
-                  <b:include data='post' name='comments'/>
-                </div>
-              </div>
-            </b:if>
-          </b:includable>
-        </b:widget>
-      </b:section>
-    </div>
-    <div class="col-md-4">
-      <b:section class='sidebar' id='sidebar' showaddelement='yes'>
-        <b:widget id='Search1' locked='false' title='Search This Blog' type='Search' version='1'/>
-        <b:widget id='PopularPosts1' locked='false' title='Popular Posts' type='PopularPosts' version='1'/>
-        <b:widget id='BlogArchive1' locked='false' title='Blog Archive' type='BlogArchive' version='1'/>
-      </b:section>
+      <!-- Footer Column 3 -->
+      <div class="col-md-4">
+        <b:section class='footer-col-3' id='footer-col-3' showaddelement='yes'>
+          <b:widget id='HTML21' locked='false' title='Follow Us' type='HTML' version='1'>
+            <b:includable id='main'>
+              <h5 class="text-uppercase"><data:title/></h5>
+              <!-- Social media icons will be rendered here -->
+              <data:content/>
+            </b:includable>
+          </b:widget>
+        </b:section>
+      </div>
     </div>
   </div>
-</main>
-<footer class="bg-light border-top mt-auto py-3">
-  <div class="container text-center">
-    <b:section class='footer-social' id='footer-social' maxwidgets='1' showaddelement='yes'>
-      <b:widget id='LinkList2' locked='false' title='Social Media' type='LinkList' version='1'>
-        <b:includable id='main'>
-          <div class='my-3'>
-            <b:loop values='data:links' var='link'>
-              <a class='btn btn-outline-secondary mx-1' expr:href='data:link.target' target='_blank'>
-                <i expr:class='&quot;bi bi-&quot; + data:link.name'/>
-              </a>
-            </b:loop>
-          </div>
-        </b:includable>
-      </b:widget>
-    </b:section>
-    <b:section class='footer' id='footer' maxwidgets='1' showaddelement='no'>
-      <b:widget id='Attribution1' locked='true' title='' type='Attribution' version='1'/>
-    </b:section>
+  <!-- Socket Area -->
+  <div class="bg-black py-3 mt-4">
+    <div class="container text-center">
+      <b:section class='footer-socket' id='footer-socket' maxwidgets='1' showaddelement='no'>
+        <b:widget id='Attribution1' locked='true' title='' type='Attribution' version='1'/>
+      </b:section>
+      <p class="mb-0">Designed by <a href="https://www.sorabloggingtips.com/" target="_blank">Sora Blogging Tips</a></p>
+    </div>
   </div>
 </footer>
+
+<!-- Bootstrap JS -->
 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'/>
+
+<!-- Theme-specific Scripts -->
+
+<!-- Default Markups for Blogger Widgets -->
+<b:defaultmarkups>
+  <b:defaultmarkup type='PopularPosts'>
+    <b:includable id='main'>
+      <div class='widget'>
+        <h4 class='widget-title'><data:title/></h4>
+        <div class='widget-content'>
+          <ul class="list-unstyled">
+          <b:loop values='data:posts' var='post'>
+            <li><a expr:href='data:post.url'><data:post.title/></a></li>
+          </b:loop>
+          </ul>
+        </div>
+      </div>
+    </b:includable>
+  </b:defaultmarkup>
+  <b:defaultmarkup type='BlogArchive'>
+    <b:includable id='main'>
+      <div class='widget'>
+        <h4 class='widget-title'><data:title/></h4>
+        <div class='widget-content'>
+          <b:include name='content'/>
+        </div>
+      </div>
+    </b:includable>
+  </b:defaultmarkup>
+</b:defaultmarkups>
+
+<script>
+// <![CDATA[
+  // --- Lazy Loading for Ads Script ---
+  // Uses IntersectionObserver to load ads when they enter the viewport.
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var lazyAds = [].slice.call(document.querySelectorAll(".lazy-ad"));
+
+    if ("IntersectionObserver" in window) {
+      let lazyAdObserver = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            let lazyAd = entry.target;
+            // Replace with your actual ad code
+            lazyAd.innerHTML = '<img src="https://via.placeholder.com/300x250.png?text=Advertisement" alt="Advertisement" />';
+            // Stop observing the ad once it has been loaded.
+            lazyAdObserver.unobserve(lazyAd);
+          }
+        });
+      });
+
+      lazyAds.forEach(function(lazyAd) {
+        lazyAdObserver.observe(lazyAd);
+      });
+    }
+  });
+// ]]>
+</script>
+
+<script>
+// <![CDATA[
+// --- Load More Posts Script ---
+document.addEventListener('DOMContentLoaded', function() {
+    var loadMoreButton = document.getElementById('load-more-button');
+    if (!loadMoreButton) {
+        return;
+    }
+
+    var postsContainer = document.getElementById('posts-container');
+    var loadMoreContainer = document.getElementById('load-more-container');
+    var nextPageUrl = loadMoreButton.href;
+
+    loadMoreButton.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        if (!nextPageUrl) {
+            loadMoreContainer.style.display = 'none';
+            return;
+        }
+
+        loadMoreButton.innerText = 'Loading...';
+        loadMoreButton.disabled = true;
+
+        fetch(nextPageUrl)
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(text) {
+                var parser = new DOMParser();
+                var htmlDocument = parser.parseFromString(text, 'text/html');
+                var newPosts = htmlDocument.querySelectorAll('#posts-container .col');
+                var newLoadMoreContainer = htmlDocument.getElementById('load-more-container');
+
+                if (newPosts.length > 0) {
+                    newPosts.forEach(function(post) {
+                        postsContainer.appendChild(post);
+                    });
+                }
+
+                if (newLoadMoreContainer) {
+                    var newLoadMoreLink = newLoadMoreContainer.querySelector('a');
+                    if (newLoadMoreLink) {
+                        nextPageUrl = newLoadMoreLink.href;
+                        loadMoreButton.innerText = 'Load More Posts';
+                        loadMoreButton.disabled = false;
+                    } else {
+                        loadMoreContainer.style.display = 'none';
+                    }
+                } else {
+                    loadMoreContainer.style.display = 'none';
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading more posts:', error);
+                loadMoreButton.innerText = 'Error. Try Again.';
+                loadMoreButton.disabled = false;
+            });
+    });
+});
+// ]]>
+</script>
 </body>
 </html>
