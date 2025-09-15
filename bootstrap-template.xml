@@ -83,6 +83,159 @@ header {
     border-radius: 0.25rem;
 }
 
+/* Shortcode Styles */
+/* --- Buttons --- */
+.sc-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: $(link.color);
+  color: #fff !important;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+.sc-button:hover {
+  background-color: #333;
+  color: #fff !important;
+}
+.sc-button .bi {
+  margin-right: 8px;
+}
+
+/* --- Alerts --- */
+.sc-alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.sc-alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+.sc-alert-info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+.sc-alert-warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+.sc-alert-error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+/* Table of Contents Styles */
+.toc-container {
+  background: #2c2c2c;
+  border: 1px solid #444;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 25px;
+}
+.toc-container .toc-title {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 10px;
+}
+.toc-container ul {
+  list-style: none;
+  padding-left: 0;
+}
+.toc-container ul li {
+  margin-bottom: 8px;
+}
+.toc-container ul a {
+  text-decoration: none;
+}
+.toc-container ul a:hover {
+  text-decoration: underline;
+}
+.toc-container ul ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+/* Trending Posts Widget Style */
+#PopularPosts2 .widget-title::before {
+  content: "\\f3d1"; /* Bootstrap Icons flame icon */
+  font-family: "bootstrap-icons";
+  margin-right: 10px;
+  color: $(link.color);
+  font-style: normal;
+}
+
+/* Post Split Pagination Styles */
+.post-pagination {
+  margin-top: 30px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.post-pagination .page-number {
+  font-style: italic;
+  color: #aaa;
+}
+.post-pagination .btn-split {
+  background-color: $(link.color);
+  color: #fff !important;
+  padding: 8px 15px;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+.post-pagination .btn-split:hover {
+  background-color: #333;
+}
+.post-pagination .btn-split[disabled] {
+  background-color: #555;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Custom Nav Styling for Simplified LinkList Logic */
+.navbar-nav > li > a {
+  padding: .5rem .5rem;
+  color: var(--bs-nav-link-color, var(--bs-navbar-color));
+  text-decoration: none;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+.navbar-nav > li > a:hover {
+  color: var(--bs-nav-link-hover-color, var(--bs-navbar-hover-color));
+}
+.dropdown-menu {
+  /* Override dark theme for dropdown to match standard Bootstrap */
+  background-color: #fff;
+}
+.dropdown-menu > li > a {
+  display: block;
+  width: 100%;
+  padding: .25rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+.dropdown-menu > li > a:hover {
+  background-color: #f8f9fa;
+  color: #1e2125;
+}
+
+
 ]]></b:skin>
 
 <!-- This is required for the Blogger layout editor to work correctly. -->
@@ -137,11 +290,7 @@ header {
                       </ul>
                     </li>
                   <b:else/>
-                    <b:if cond='data:link.target.startsWith(&quot;http&quot;)'>
-                        <li><a class='dropdown-item' expr:href='data:link.target'><data:link.name/></a></li>
-                    <b:else/>
-                        <li class='nav-item'><a class='nav-link' expr:href='data:link.target'><data:link.name/></a></li>
-                    </b:if>
+                    <li><a expr:href='data:link.target'><data:link.name/></a></li>
                   </b:if>
                 </b:loop>
               </ul>
@@ -183,34 +332,60 @@ header {
   <b:section class='featured-post' id='featured-post' maxwidgets='1' showaddelement='yes'>
     <b:widget id='HTML3' locked='false' title='Featured Post' type='HTML' version='1'>
       <b:includable id='main'>
-        <!-- The user provides the URL of the featured post in this div -->
+        <!-- Shortcode for featured post: {getPosts} $label={Label Name} -->
         <div id='featured-post-container' class='hero-post'>
           <data:content/>
         </div>
         <script>
         // <![CDATA[
-          // --- Featured Post Script ---
-          // Fetches and displays a featured post from a given URL.
+          // --- Featured Post Script v2 ---
+          // Fetches and displays a featured post based on a shortcode.
+          // Shortcode: {getPosts} $label={Label Name}
 
           var featuredPostContainer = document.getElementById('featured-post-container');
           if (featuredPostContainer) {
-            // Get the URL from the widget's content.
-            var featuredPostUrl = featuredPostContainer.innerText.trim();
-            if (featuredPostUrl) {
-              // Construct the JSON-in-script URL.
-              var url = featuredPostUrl.split('?')[0] + '?alt=json-in-script&callback=showFeaturedPost';
-              // Create a script tag to fetch the data.
-              var script = document.createElement('script');
-              script.src = url;
-              document.body.appendChild(script);
+            var shortcode = featuredPostContainer.innerText.trim();
+            var labelMatch = shortcode.match(/\$label=\{([^}]+)\}/);
+            var label = null;
+            if (labelMatch && labelMatch[1]) {
+                label = labelMatch[1];
+            }
+
+            var feedUrl;
+            if (shortcode.includes('{getPosts}')) {
+                if (label && label.toLowerCase() !== 'recent') {
+                    feedUrl = '/feeds/posts/default/-/' + encodeURIComponent(label) + '?alt=json-in-script&max-results=1&callback=showFeaturedPost';
+                } else {
+                    // Default to recent post
+                    feedUrl = '/feeds/posts/default?alt=json-in-script&max-results=1&callback=showFeaturedPost';
+                }
+
+                var script = document.createElement('script');
+                script.src = feedUrl;
+                document.body.appendChild(script);
             }
           }
 
           // Callback function to render the featured post.
           function showFeaturedPost(json) {
-            var entry = json.entry;
-            var postUrl = featuredPostUrl;
+            if (!json.feed || !json.feed.entry || json.feed.entry.length === 0) {
+                if (featuredPostContainer) featuredPostContainer.style.display = 'none';
+                return;
+            }
+
+            var entry = json.feed.entry[0];
             var postTitle = entry.title.$t;
+
+            var postUrl;
+            for (var i = 0; i < entry.link.length; i++) {
+                if (entry.link[i].rel == 'alternate') {
+                    postUrl = entry.link[i].href;
+                    break;
+                }
+            }
+
+            if (!postUrl) return;
+
             var postSnippet = ("summary" in entry) ? entry.summary.$t.replace(/<[^>]*>/g, "").substring(0, 250) + '...' : "";
             var postImage = ("media$thumbnail" in entry) ? entry.media$thumbnail.url.replace('/s72-c/', '/s1600/') : "https://via.placeholder.com/800x400";
 
@@ -226,6 +401,9 @@ header {
 
             if (featuredPostContainer) {
                 featuredPostContainer.innerHTML = html;
+                if (window.lazySizes) {
+                    lazySizes.loader.checkElems();
+                }
             }
           }
         // ]]>
@@ -254,23 +432,32 @@ header {
         <b:section class='main' id='main' showaddelement='yes'>
           <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='1'>
             <b:includable id='main'>
-              <div class='row row-cols-1 row-cols-md-2 g-4' id='posts-container'>
+              <!-- Homepage and Archive Views -->
+              <b:if cond='data:view.isMultipleItems'>
+                <div class='row row-cols-1 row-cols-md-2 g-4' id='posts-container'>
+                  <b:loop values='data:posts' var='post'>
+                      <div class='col'>
+                          <b:include data='post' name='post-card'/>
+                      </div>
+                  </b:loop>
+                </div>
+                <div class='text-center mt-4' id='load-more-container'>
+                  <b:if cond='data:posts.nextPageUrl'>
+                    <a class='btn btn-primary' expr:href='data:posts.nextPageUrl' id='load-more-button'>Load More Posts</a>
+                  </b:if>
+                </div>
+              <b:else if='data:view.isItem'/>
+                <!-- Single Item View -->
                 <b:loop values='data:posts' var='post'>
-                    <div class='col'>
-                        <b:include data='post' name='post'/>
-                    </div>
+                  <b:include data='post' name='item-post'/>
                 </b:loop>
-              </div>
-              <div class='text-center mt-4' id='load-more-container'>
-                <b:if cond='data:posts.nextPageUrl'>
-                  <a class='btn btn-primary' expr:href='data:posts.nextPageUrl' id='load-more-button'>Load More Posts</a>
-                </b:if>
-              </div>
+              </b:if>
               <b:if cond='!data:view.isHomepage'>
                 <b:include name='nextprev'/>
               </b:if>
             </b:includable>
-            <b:includable id='post' var='post'>
+
+            <b:includable id='post-card' var='post'>
               <div class='card h-100'>
                 <a expr:href='data:post.url'>
                     <b:if cond='data:post.firstImageUrl'>
@@ -291,6 +478,20 @@ header {
                     <a class='btn btn-primary btn-sm' expr:href='data:post.url'>Read More</a>
                 </div>
               </div>
+            </b:includable>
+
+            <b:includable id='item-post' var='post'>
+              <div class="post-header mb-4">
+                <h1 class="post-title"><data:post.title/></h1>
+                <p class='card-text text-muted fs-sm'>
+                  <span class='me-2'><i class='bi bi-person'/> <data:post.author/></span>
+                  <span class='me-2'><i class='bi bi-calendar'/> <data:post.timestamp/></span>
+                </p>
+              </div>
+              <div class="post-content-container mb-4">
+                <data:post.body/>
+              </div>
+              <!-- Author Box, Related Posts, Comments will go here -->
             </b:includable>
           </b:widget>
         </b:section>
@@ -362,6 +563,52 @@ header {
                         recentPostsContainer.innerHTML += html;
                       }
                     }
+                  // ]]>
+                  </script>
+                </div>
+              </div>
+            </b:includable>
+          </b:widget>
+          <!-- Trending Posts Widget -->
+          <b:widget id='HTML6' locked='false' title='Trending Posts' type='HTML' version='1'>
+            <b:includable id='main'>
+              <div class='widget'>
+                <h4 class='widget-title'><data:title/></h4>
+                <div class='widget-content'>
+                  <ul class='list-unstyled' id='trending-posts-container'/>
+                  <script>
+                  // <![CDATA[
+                    function showTrendingPosts(json) {
+                      var posts = json.feed.entry;
+                      if (!posts) { return; }
+                      posts.sort(function(a, b) {
+                        var countA = a.thr$total ? parseInt(a.thr$total.$t, 10) : 0;
+                        var countB = b.thr$total ? parseInt(b.thr$total.$t, 10) : 0;
+                        return countB - countA;
+                      });
+
+                      var container = document.getElementById('trending-posts-container');
+                      var maxPosts = 5;
+                      for (var i = 0; i < posts.length && i < maxPosts; i++) {
+                        var entry = posts[i];
+                        var postTitle = entry.title.$t;
+                        var postUrl;
+                        for (var j = 0; j < entry.link.length; j++) {
+                          if (entry.link[j].rel == 'alternate') {
+                            postUrl = entry.link[j].href;
+                            break;
+                          }
+                        }
+                        if (postUrl) {
+                          var listItem = document.createElement('li');
+                          listItem.innerHTML = '<a href="' + postUrl + '">' + postTitle + '</a>';
+                          container.appendChild(listItem);
+                        }
+                      }
+                    }
+                    var script = document.createElement('script');
+                    script.src = '/feeds/posts/default?alt=json-in-script&max-results=150&callback=showTrendingPosts';
+                    document.body.appendChild(script);
                   // ]]>
                   </script>
                 </div>
@@ -516,38 +763,29 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!loadMoreButton) {
         return;
     }
-
     var postsContainer = document.getElementById('posts-container');
     var loadMoreContainer = document.getElementById('load-more-container');
     var nextPageUrl = loadMoreButton.href;
-
     loadMoreButton.addEventListener('click', function(e) {
         e.preventDefault();
-
         if (!nextPageUrl) {
             loadMoreContainer.style.display = 'none';
             return;
         }
-
         loadMoreButton.innerText = 'Loading...';
         loadMoreButton.disabled = true;
-
         fetch(nextPageUrl)
-            .then(function(response) {
-                return response.text();
-            })
+            .then(function(response) { return response.text(); })
             .then(function(text) {
                 var parser = new DOMParser();
                 var htmlDocument = parser.parseFromString(text, 'text/html');
                 var newPosts = htmlDocument.querySelectorAll('#posts-container .col');
                 var newLoadMoreContainer = htmlDocument.getElementById('load-more-container');
-
                 if (newPosts.length > 0) {
                     newPosts.forEach(function(post) {
                         postsContainer.appendChild(post);
                     });
                 }
-
                 if (newLoadMoreContainer) {
                     var newLoadMoreLink = newLoadMoreContainer.querySelector('a');
                     if (newLoadMoreLink) {
@@ -567,6 +805,110 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadMoreButton.disabled = false;
             });
     });
+});
+
+// --- Post Content Processor Script ---
+document.addEventListener('DOMContentLoaded', function() {
+    var postContent = document.querySelector('.post-content-container');
+    if (!postContent) { return; }
+
+    // --- Processor 1: Button and Alert Shortcodes ---
+    var tempHtml = postContent.innerHTML;
+    var iconMap = {
+        preview: 'bi-eye', download: 'bi-download', link: 'bi-link-45deg', cart: 'bi-cart',
+        share: 'bi-share', contact: 'bi-envelope', info: 'bi-info-circle',
+        paypal: 'bi-paypal', whatsapp: 'bi-whatsapp', gift: 'bi-gift'
+    };
+    var newHtml = tempHtml.replace(/{getButton}(.*?)}/g, function(match, args) {
+        var text = (args.match(/\$text=\{([^}]+)\}/) || [])[1] || 'Button';
+        var icon = (args.match(/\$icon=\{([^}]+)\}/) || [])[1] || '';
+        var color = (args.match(/\$color=\{([^}]+)\}/) || [])[1] || '';
+        var link = (args.match(/\$link=\{([^}]+)\}/) || [])[1] || '#';
+        var iconHtml = icon && iconMap[icon] ? '<i class="bi ' + iconMap[icon] + '"></i>' : '';
+        var style = color ? 'style="background-color:' + color + '"' : '';
+        return '<a href="' + link + '" class="sc-button" ' + style + '>' + iconHtml + text + '</a>';
+    });
+    if (tempHtml !== newHtml) {
+      postContent.innerHTML = newHtml;
+    }
+    var blockquotes = postContent.querySelectorAll('blockquote');
+    blockquotes.forEach(function(bq) {
+        var text = bq.innerText.trim();
+        var alertTypes = ['alertSuccess', 'alertInfo', 'alertWarning', 'alertError'];
+        for (var i = 0; i < alertTypes.length; i++) {
+            var shortcode = '{' + alertTypes[i] + '}';
+            if (text.startsWith(shortcode)) {
+                bq.innerHTML = bq.innerHTML.replace(shortcode, '');
+                var alertClass = 'sc-' + alertTypes[i].replace('A', '-a');
+                bq.classList.add('sc-alert', alertClass);
+                break;
+            }
+        }
+    });
+
+    // --- Processor 2: TOC Generator ---
+    var tocContainer = document.getElementById('toc-container');
+    if (tocContainer) {
+        var headings = postContent.querySelectorAll('h2, h3');
+        if (headings.length > 1) {
+            var tocList = document.createElement('ul');
+            var tocTitle = document.createElement('div');
+            tocTitle.className = 'toc-title';
+            tocTitle.innerText = 'Table of Contents';
+            tocContainer.appendChild(tocTitle);
+            var currentH2ListItem = null;
+            headings.forEach(function(heading, index) {
+                var level = parseInt(heading.tagName.substring(1), 10);
+                var id = 'toc-' + index;
+                heading.setAttribute('id', id);
+                var listItem = document.createElement('li');
+                var link = document.createElement('a');
+                link.setAttribute('href', '#' + id);
+                link.innerText = heading.innerText;
+                listItem.appendChild(link);
+                if (level === 2) {
+                    tocList.appendChild(listItem);
+                    currentH2ListItem = listItem;
+                } else if (level === 3 && currentH2ListItem) {
+                    var sublist = currentH2ListItem.querySelector('ul');
+                    if (!sublist) {
+                        sublist = document.createElement('ul');
+                        currentH2ListItem.appendChild(sublist);
+                    }
+                    sublist.appendChild(listItem);
+                } else {
+                    tocList.appendChild(listItem);
+                }
+            });
+            tocContainer.appendChild(tocList);
+        }
+    }
+
+    // --- Processor 3: Post Splitter ---
+    var splitMarker = '<!-- split -->';
+    if (postContent.innerHTML.includes(splitMarker)) {
+        var pages = postContent.innerHTML.split(splitMarker);
+        var currentPage = 0;
+        var paginationContainer = document.createElement('div');
+        paginationContainer.className = 'post-pagination';
+        postContent.parentNode.insertBefore(paginationContainer, postContent.nextSibling);
+
+        function updatePage() {
+            postContent.innerHTML = pages[currentPage];
+            var pageNum = currentPage + 1;
+            var totalPages = pages.length;
+            paginationContainer.innerHTML = '<button class="btn-split" id="prev-page" ' + (currentPage === 0 ? 'disabled' : '') + '>Previous</button>' +
+                                          '<span class="page-number">Page ' + pageNum + ' of ' + totalPages + '</span>' +
+                                          '<button class="btn-split" id="next-page" ' + (currentPage === totalPages - 1 ? 'disabled' : '') + '>Next</button>';
+            document.getElementById('prev-page').addEventListener('click', function() {
+                if (currentPage > 0) { currentPage--; updatePage(); postContent.scrollIntoView({ behavior: 'smooth' }); }
+            });
+            document.getElementById('next-page').addEventListener('click', function() {
+                if (currentPage < pages.length - 1) { currentPage++; updatePage(); postContent.scrollIntoView({ behavior: 'smooth' }); }
+            });
+        }
+        updatePage();
+    }
 });
 // ]]>
 </script>
