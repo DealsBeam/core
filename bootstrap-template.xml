@@ -14,18 +14,21 @@
 <!-- Blogger Theme Skin -->
 <b:skin><![CDATA[
 /*
-* Bootstrap Blogger Theme
+* Bootstrap Blogger Theme - Spotlight Dark Redesign
 * --------------------------------------------------
-* @version 1.2
+* @version 2.0
 * @author Jules
 */
 
 /* Variable definitions for Theme Designer
 ----------------------------------------------- */
 <Group description="Theme Colors" selector="body">
-  <Variable name="body.background.color" description="Background Color" type="color" default="#f8f9fa" value="#f8f9fa"/>
-  <Variable name="body.text.color" description="Text Color" type="color" default="#212529" value="#212529"/>
-  <Variable name="link.color" description="Link Color" type="color" default="#0d6efd" value="#0d6efd"/>
+  <Variable name="body.background.color" description="Background Color" type="color" default="#1a1a1a" value="#1a1a1a"/>
+  <Variable name="body.text.color" description="Text Color" type="color" default="#f8f9fa" value="#f8f9fa"/>
+  <Variable name="link.color" description="Link Color" type="color" default="#ff4500" value="#ff4500"/>
+  <Variable name="header.background.color" description="Header Background Color" type="color" default="#212529" value="#212529"/>
+  <Variable name="card.background.color" description="Card Background Color" type="color" default="#212529" value="#212529"/>
+  <Variable name="card.border.color" description="Card Border Color" type="color" default="#333" value="#333"/>
 </Group>
 <Group description="Fonts" selector="body">
     <Variable name="body.font" description="Body Font" type="font" default="normal normal 16px 'Helvetica Neue', Arial, sans-serif" value="normal normal 16px 'Helvetica Neue', Arial, sans-serif"/>
@@ -46,44 +49,40 @@ a {
 header {
   position: relative;
   z-index: 1030;
+  background-color: $(header.background.color) !important;
 }
 
-/* Dark Mode Styles
------------------------------------------------ */
-.dark-mode body {
-  background-color: #121212;
-  color: #fff;
-}
-.dark-mode .bg-light {
-  background-color: #212529 !important;
-}
-.dark-mode .card {
-  background-color: #1e1e1e;
-  border-color: #333;
-}
-.dark-mode .text-muted {
-  color: #aaa !important;
-}
-.dark-mode a {
-  color: #8ab4f8;
+.card {
+    background-color: $(card.background.color);
+    border-color: $(card.border.color);
 }
 
-/* Dark mode toggle button icons */
-#dark-mode-toggle ~ label .bi-sun {
-  display: none;
+.bg-light {
+    background-color: $(header.background.color) !important;
 }
-#dark-mode-toggle:checked ~ label .bi-moon {
-  display: none;
+
+.text-muted {
+    color: #aaa !important;
 }
-#dark-mode-toggle:checked ~ label .bi-sun {
-  display: inline-block;
+
+/* Sidebar Widget Styles */
+.widget {
+    margin-bottom: 2rem;
 }
-html.dark-mode #dark-mode-toggle ~ label .bi-moon {
-  display: none;
+
+.widget-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid $(link.color);
+    padding-bottom: 0.5rem;
 }
-html.dark-mode #dark-mode-toggle ~ label .bi-sun {
-  display: inline-block;
+
+.widget-content {
+    background-color: $(card.background.color);
+    padding: 1.5rem;
+    border-radius: 0.25rem;
 }
+
 ]]></b:skin>
 
 <!-- This is required for the Blogger layout editor to work correctly. -->
@@ -123,25 +122,57 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
       </button>
       <!-- Navigation Menu -->
       <div class='collapse navbar-collapse' id='navbarNav'>
-        <b:section class='ms-auto' id='navbar' maxwidgets='1' showaddelement='yes'>
+        <b:section class='mx-auto' id='navbar' maxwidgets='1' showaddelement='yes'>
           <b:widget id='LinkList1' locked='false' title='Menu' type='LinkList' version='1'>
             <b:includable id='main'>
               <ul class='navbar-nav'>
                 <b:loop values='data:links' var='link'>
-                  <li class='nav-item'><a class='nav-link' expr:href='data:link.target'><data:link.name/></a></li>
+                  <b:if cond='data:link.target == &quot;#sub-start&quot;'>
+                    <li class='nav-item dropdown'>
+                      <a class='nav-link dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                        <data:link.name/>
+                      </a>
+                      <ul class='dropdown-menu'>
+                  <b:else if='data:link.target == &quot;#sub-end&quot;'/>
+                      </ul>
+                    </li>
+                  <b:else/>
+                    <b:if cond='data:link.target.startsWith(&quot;http&quot;)'>
+                        <li><a class='dropdown-item' expr:href='data:link.target'><data:link.name/></a></li>
+                    <b:else/>
+                        <li class='nav-item'><a class='nav-link' expr:href='data:link.target'><data:link.name/></a></li>
+                    </b:if>
+                  </b:if>
                 </b:loop>
               </ul>
             </b:includable>
           </b:widget>
         </b:section>
-        <!-- Dark Mode Toggle -->
-        <div class='d-flex align-items-center'>
-          <input class='d-none' id='dark-mode-toggle' type='checkbox'/>
-          <label class='nav-link' for='dark-mode-toggle' style='cursor: pointer;'>
-            <i class='bi bi-moon'/>
-            <i class='bi bi-sun'/>
-          </label>
-        </div>
+        <b:section class='ms-auto' id='search' maxwidgets='1' showaddelement='yes'>
+            <b:widget id='HTML100' locked='false' title='Search' type='HTML' version='1'>
+                <b:includable id='main'>
+                    <div class='d-flex align-items-center'>
+                        <a class='nav-link' href='javascript:void(0);' id='search-button'>
+                            <i class='bi bi-search'></i>
+                        </a>
+                    </div>
+                    <div class='d-none' id='search-form-container'>
+                        <form expr:action='data:blog.searchUrl' method='get' class='d-flex'>
+                            <input class='form-control me-2' name='q' placeholder='Search...' type='text'/>
+                            <button class='btn btn-outline-primary' type='submit'>Search</button>
+                        </form>
+                    </div>
+                    <script>
+                    // <![CDATA[
+                        document.getElementById('search-button').addEventListener('click', function() {
+                            var searchForm = document.getElementById('search-form-container');
+                            searchForm.classList.toggle('d-none');
+                        });
+                    // ]]>
+                    </script>
+                </b:includable>
+            </b:widget>
+        </b:section>
       </div>
     </div>
   </nav>
@@ -153,7 +184,7 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
     <b:widget id='HTML3' locked='false' title='Featured Post' type='HTML' version='1'>
       <b:includable id='main'>
         <!-- The user provides the URL of the featured post in this div -->
-        <div id='featured-post-container'>
+        <div id='featured-post-container' class='hero-post'>
           <data:content/>
         </div>
         <script>
@@ -181,15 +212,15 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
             var postUrl = featuredPostUrl;
             var postTitle = entry.title.$t;
             var postSnippet = ("summary" in entry) ? entry.summary.$t.replace(/<[^>]*>/g, "").substring(0, 250) + '...' : "";
-            var postImage = ("media$thumbnail" in entry) ? entry.media$thumbnail.url : "https://via.placeholder.com/150";
+            var postImage = ("media$thumbnail" in entry) ? entry.media$thumbnail.url.replace('/s72-c/', '/s1600/') : "https://via.placeholder.com/800x400";
 
-            var html = '<div class="card mb-4">';
-            html += '<div class="card-header">Featured Post</div>';
-            html += '<img data-src="' + postImage + '" class="card-img-top lazyload" alt="' + postTitle + '"/>';
-            html += '<div class="card-body">';
-            html += '<h2 class="card-title"><a href="' + postUrl + '">' + postTitle + '</a></h2>';
-            html += '<p class="card-text">' + postSnippet + '</p>';
-            html += '<a class="btn btn-primary" href="' + postUrl + '">Read More</a>';
+            var html = '<div class="card flex-md-row mb-4 shadow-sm h-md-250">';
+            html += '<img data-src="' + postImage + '" class="card-img-left flex-auto d-none d-md-block lazyload" style="width: 50%; object-fit: cover;" alt="' + postTitle + '"/>';
+            html += '<div class="card-body d-flex flex-column align-items-start">';
+            html += '<h2 class="mb-0"><a class="text-light" href="' + postUrl + '">' + postTitle + '</a></h2>';
+            html += '<div class="mb-1 text-muted">' + new Date(entry.published.$t).toLocaleDateString() + '</div>';
+            html += '<p class="card-text mb-auto">' + postSnippet + '</p>';
+            html += '<a class="stretched-link" href="' + postUrl + '">Continue reading</a>';
             html += '</div>';
             html += '</div>';
 
@@ -223,179 +254,43 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
         <b:section class='main' id='main' showaddelement='yes'>
           <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='1'>
             <b:includable id='main'>
-              <!-- Loop through and display all posts -->
-              <b:loop values='data:posts' var='post'>
-                <b:include data='post' name='post'/>
-              </b:loop>
+              <div class='row row-cols-1 row-cols-md-2 g-4' id='posts-container'>
+                <b:loop values='data:posts' var='post'>
+                    <div class='col'>
+                        <b:include data='post' name='post'/>
+                    </div>
+                </b:loop>
+              </div>
+              <div class='text-center mt-4' id='load-more-container'>
+                <b:if cond='data:posts.nextPageUrl'>
+                  <a class='btn btn-primary' expr:href='data:posts.nextPageUrl' id='load-more-button'>Load More Posts</a>
+                </b:if>
+              </div>
+              <b:if cond='!data:view.isHomepage'>
+                <b:include name='nextprev'/>
+              </b:if>
             </b:includable>
             <b:includable id='post' var='post'>
-              <div class='card mb-4'>
-                <div class='card-body'>
-                  <h2 class='card-title'>
-                    <!-- Display post title as a link on list pages, and as plain text on single item pages -->
-                    <b:if cond='data:view.isSingleItem'>
-                      <data:post.title/>
+              <div class='card h-100'>
+                <a expr:href='data:post.url'>
+                    <b:if cond='data:post.firstImageUrl'>
+                        <img class='card-img-top lazyload' expr:data-src='data:post.firstImageUrl' alt='...'/>
                     <b:else/>
-                      <a expr:href='data:post.url'><data:post.title/></a>
+                        <img class='card-img-top lazyload' data-src='https://via.placeholder.com/700x350' alt='...'/>
                     </b:if>
-                  </h2>
-                  <!-- Post metadata -->
-                  <div class='card-subtitle mb-2 text-muted'>
+                </a>
+                <div class='card-body'>
+                  <h2 class='card-title h5'><a expr:href='data:post.url'><data:post.title/></a></h2>
+                  <p class='card-text text-muted fs-sm'>
                     <span class='me-2'><i class='bi bi-person'/> <data:post.author/></span>
                     <span class='me-2'><i class='bi bi-calendar'/> <data:post.timestamp/></span>
-                  </div>
-                  <!-- Table of Contents (only on single post pages) -->
-                  <b:if cond='data:view.isSingleItem'>
-                    <div id='toc-container' class='card mb-4'>
-                      <div class='card-header'>Table of Contents</div>
-                      <div class='card-body'>
-                        <ul id='toc' class='list-unstyled'></ul>
-                      </div>
-                    </div>
-                  </b:if>
-                  <!-- Post body content -->
-                  <div class='card-text'>
-                    <b:if cond='data:view.isSingleItem'>
-                      <!-- Display the full post body -->
-                      <data:post.body/>
-                      <script>
-                      // <![CDATA[
-                        // --- Table of Contents Script ---
-                        // Generates a TOC from h2, h3, and h4 tags in the post body.
-
-                        var tocContainer = document.getElementById('toc-container');
-                        if (tocContainer) {
-                          var toc = document.getElementById('toc');
-                          var postBody = document.querySelector('.card-text');
-                          if (toc && postBody) {
-                              var headings = postBody.querySelectorAll('h2, h3, h4');
-                              if (headings.length > 0) {
-                                var tocList = document.createElement('ul');
-                                tocList.classList.add('list-unstyled');
-                                for (var i = 0; i < headings.length; i++) {
-                                  var heading = headings[i];
-                                  var id = 'toc-' + i;
-                                  heading.setAttribute('id', id);
-                                  var li = document.createElement('li');
-                                  var a = document.createElement('a');
-                                  a.setAttribute('href', '#' + id);
-                                  a.textContent = heading.textContent;
-                                  li.appendChild(a);
-                                  tocList.appendChild(li);
-                                }
-                                toc.appendChild(tocList);
-                              } else {
-                                // Hide the TOC container if no headings are found.
-                                tocContainer.style.display = 'none';
-                              }
-                          }
-                        }
-                      // ]]>
-                      </script>
-                    <b:else/>
-                      <!-- Display a snippet of the post body -->
-                      <b:eval expr='data:post.snippets.long ? data:post.snippets.long : data:post.body snippet { length: 250, links: false, linebreaks: true }'/>
-                      <div class='mt-2'>
-                        <a class='btn btn-primary btn-sm' expr:href='data:post.url'>Read More</a>
-                      </div>
-                    </b:if>
-                  </div>
-                  <!-- Post labels -->
-                  <div class='mt-3'>
-                    <b:loop values='data:post.labels' var='label'>
-                      <a class='btn btn-outline-secondary btn-sm me-1' expr:href='data:label.url'><data:label.name/></a>
-                    </b:loop>
-                  </div>
-                  <!-- Social sharing buttons -->
-                  <div class='mt-3'>
-                    <strong>Share this post:</strong>
-                    <a class='btn btn-outline-primary btn-sm' expr:href='&quot;https://www.facebook.com/sharer/sharer.php?u=&quot; + data:post.url.canonical' target='_blank'><i class='bi bi-facebook'/></a>
-                    <a class='btn btn-outline-info btn-sm' expr:href='&quot;https://twitter.com/intent/tweet?url=&quot; + data:post.url.canonical + &quot;&amp;text=&quot; + data:post.title' target='_blank'><i class='bi bi-twitter'/></a>
-                    <a class='btn btn-outline-primary btn-sm' expr:href='&quot;https://www.linkedin.com/shareArticle?mini=true&amp;url=&quot; + data:post.url.canonical' target='_blank'><i class='bi bi-linkedin'/></a>
-                    <a class='btn btn-outline-danger btn-sm' expr:href='&quot;https://pinterest.com/pin/create/button/?url=&quot; + data:post.url.canonical + &quot;&amp;media=&quot; + data:post.firstImageUrl + &quot;&amp;description=&quot; + data:post.title' target='_blank'><i class='bi bi-pinterest'/></a>
-                  </div>
+                  </p>
+                  <p class='card-text'><b:eval expr='data:post.snippets.long ? data:post.snippets.long : data:post.body snippet { length: 150, links: false, linebreaks: true }'/></p>
+                </div>
+                <div class='card-footer'>
+                    <a class='btn btn-primary btn-sm' expr:href='data:post.url'>Read More</a>
                 </div>
               </div>
-              <!-- Additional sections for single post pages -->
-              <b:if cond='data:view.isSingleItem'>
-                <!-- Author Box -->
-                <div class='card my-4'>
-                  <div class='card-body'>
-                    <div class='d-flex align-items-center'>
-                      <div class='flex-shrink-0'>
-                        <img class='rounded-circle' expr:src='data:post.author.authorPhoto.image' style='width: 80px; height: 80px;'/>
-                      </div>
-                      <div class='flex-grow-1 ms-3'>
-                        <h5 class='mt-0'><data:post.author.name/></h5>
-                        <p><data:post.author.aboutMe/></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Comments Section -->
-                <div class='card my-4'>
-                  <div class='card-body'>
-                    <b:include data='post' name='comments'/>
-                  </div>
-                </div>
-                <!-- Related Posts Section -->
-                <div id='related-posts'>
-                  <h3 class='my-4'>Related Posts</h3>
-                  <div class='row'>
-                    <!-- Related posts will be loaded here by the script -->
-                  </div>
-                </div>
-                <script>
-                // <![CDATA[
-                  // --- Related Posts Script ---
-                  // Fetches and displays related posts based on the first label of the current post.
-
-                  var postLabels = [<b:loop values='data:post.labels' var='label'>'<data:label.name/>'<b:if cond='data:label.isLast != "true"'>,</b:if></b:loop>];
-                  if (postLabels.length > 0) {
-                    var relatedPostsContainer = document.getElementById('related-posts');
-                    // Fetch posts with the same first label.
-                    var url = '/feeds/posts/default/-/' + postLabels[0] + '?alt=json-in-script&max-results=3&callback=showRelatedPosts';
-                    var script = document.createElement('script');
-                    script.src = url;
-                    document.body.appendChild(script);
-                  }
-
-                  // Callback function to render the related posts.
-                  function showRelatedPosts(json) {
-                    var relatedPostsContainer = document.querySelector('#related-posts .row');
-                    if (!relatedPostsContainer) return;
-
-                    for (var i = 0; i < json.feed.entry.length; i++) {
-                      var entry = json.feed.entry[i];
-                      var postUrl;
-                      for (var j = 0; j < entry.link.length; j++) {
-                        if (entry.link[j].rel == 'alternate') {
-                          postUrl = entry.link[j].href;
-                          break;
-                        }
-                      }
-                      // Don't show the current post in the related posts section.
-                      if (postUrl == window.location.href) continue;
-
-                      var postTitle = entry.title.$t;
-                      var postSnippet = ("summary" in entry) ? entry.summary.$t.replace(/<[^>]*>/g, "").substring(0, 100) + '...' : "";
-                      var postImage = ("media$thumbnail" in entry) ? entry.media$thumbnail.url : "https://via.placeholder.com/150";
-
-                      var html = '<div class="col-md-4 mb-4">';
-                      html += '<div class="card">';
-                      html += '<img data-src="' + postImage + '" class="card-img-top lazyload" alt="' + postTitle + '"/>';
-                      html += '<div class="card-body">';
-                      html += '<h5 class="card-title"><a href="' + postUrl + '">' + postTitle + '</a></h5>';
-                      html += '<p class="card-text">' + postSnippet + '</p>';
-                      html += '</div>';
-                      html += '</div>';
-                      html += '</div>';
-                      relatedPostsContainer.innerHTML += html;
-                    }
-                  }
-                // ]]>
-                </script>
-              </b:if>
             </b:includable>
           </b:widget>
         </b:section>
@@ -406,9 +301,9 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
           <!-- Search Widget -->
           <b:widget id='HTML2' locked='false' title='Search' type='HTML' version='1'>
             <b:includable id='main'>
-              <div class='card mb-4'>
-                <div class='card-header'><data:title/></div>
-                <div class='card-body'>
+              <div class='widget'>
+                <h4 class='widget-title'><data:title/></h4>
+                <div class='widget-content'>
                   <form expr:action='data:blog.searchUrl' method='get'>
                     <div class='input-group'>
                       <input class='form-control' name='q' placeholder='Search...' type='text'/>
@@ -422,9 +317,9 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
           <!-- Recent Posts Widget -->
           <b:widget id='HTML4' locked='false' title='Recent Posts' type='HTML' version='1'>
             <b:includable id='main'>
-              <div class='card mb-4'>
-                <div class='card-header'><data:title/></div>
-                <div class='card-body'>
+              <div class='widget'>
+                <h4 class='widget-title'><data:title/></h4>
+                <div class='widget-content'>
                   <div id='recent-posts-container'></div>
                   <script>
                   // <![CDATA[
@@ -480,9 +375,9 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
           <!-- Advertisement Widget -->
           <b:widget id='HTML5' locked='false' title='Advertisement' type='HTML' version='1'>
             <b:includable id='main'>
-              <div class='card mb-4'>
-                <div class='card-header'><data:title/></div>
-                <div class='card-body'>
+              <div class='widget'>
+                <h4 class='widget-title'><data:title/></h4>
+                <div class='widget-content'>
                   <div class='lazy-ad' style='width: 300px; height: 250px;'>
                     <!-- Ad will be loaded here -->
                   </div>
@@ -497,26 +392,57 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
 </b:if>
 
 <!-- Footer -->
-<footer class="bg-light border-top mt-auto py-3">
-  <div class="container text-center">
-    <!-- Social Media Links -->
-    <b:section class='footer-social' id='footer-social' maxwidgets='1' showaddelement='yes'>
-      <b:widget id='LinkList2' locked='false' title='Social Media' type='LinkList' version='1'>
-        <b:includable id='main'>
-          <div class='my-3'>
-            <b:loop values='data:links' var='link'>
-              <a class='btn btn-outline-secondary mx-1' expr:href='data:link.target' target='_blank'>
-                <i expr:class='&quot;bi bi-&quot; + data:link.name'/>
-              </a>
-            </b:loop>
-          </div>
-        </b:includable>
-      </b:widget>
-    </b:section>
-    <!-- Blogger Attribution -->
-    <b:section class='footer' id='footer' maxwidgets='1' showaddelement='no'>
-      <b:widget id='Attribution1' locked='true' title='' type='Attribution' version='1'/>
-    </b:section>
+<footer class="bg-dark text-light mt-auto pt-5">
+  <div class="container">
+    <div class="row">
+      <!-- Footer Column 1 -->
+      <div class="col-md-4">
+        <b:section class='footer-col-1' id='footer-col-1' showaddelement='yes'>
+          <b:widget id='HTML20' locked='false' title='About Us' type='HTML' version='1'>
+            <b:includable id='main'>
+              <h5 class="text-uppercase"><data:title/></h5>
+              <p><data:content/></p>
+            </b:includable>
+          </b:widget>
+        </b:section>
+      </div>
+      <!-- Footer Column 2 -->
+      <div class="col-md-4">
+        <b:section class='footer-col-2' id='footer-col-2' showaddelement='yes'>
+          <b:widget id='LinkList20' locked='false' title='Categories' type='LinkList' version='1'>
+            <b:includable id='main'>
+              <h5 class="text-uppercase"><data:title/></h5>
+              <ul class="list-unstyled">
+                <b:loop values='data:links' var='link'>
+                  <li><a expr:href='data:link.target' class="text-light"><data:link.name/></a></li>
+                </b:loop>
+              </ul>
+            </b:includable>
+          </b:widget>
+        </b:section>
+      </div>
+      <!-- Footer Column 3 -->
+      <div class="col-md-4">
+        <b:section class='footer-col-3' id='footer-col-3' showaddelement='yes'>
+          <b:widget id='HTML21' locked='false' title='Follow Us' type='HTML' version='1'>
+            <b:includable id='main'>
+              <h5 class="text-uppercase"><data:title/></h5>
+              <!-- Social media icons will be rendered here -->
+              <data:content/>
+            </b:includable>
+          </b:widget>
+        </b:section>
+      </div>
+    </div>
+  </div>
+  <!-- Socket Area -->
+  <div class="bg-black py-3 mt-4">
+    <div class="container text-center">
+      <b:section class='footer-socket' id='footer-socket' maxwidgets='1' showaddelement='no'>
+        <b:widget id='Attribution1' locked='true' title='' type='Attribution' version='1'/>
+      </b:section>
+      <p class="mb-0">Designed by <a href="https://www.sorabloggingtips.com/" target="_blank">Sora Blogging Tips</a></p>
+    </div>
   </div>
 </footer>
 
@@ -524,41 +450,15 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'/>
 
 <!-- Theme-specific Scripts -->
-<script>
-// <![CDATA[
-  // --- Dark Mode Script ---
-  // Toggles dark mode and saves the user's preference in localStorage.
-
-  const darkModeToggle = document.getElementById('dark-mode-toggle');
-  const htmlElement = document.documentElement;
-
-  // Check for saved dark mode preference on page load.
-  if (localStorage.getItem('dark-mode') === 'true') {
-    htmlElement.classList.add('dark-mode');
-    darkModeToggle.checked = true;
-  }
-
-  // Add event listener to the toggle button.
-  darkModeToggle.addEventListener('change', () => {
-    if (darkModeToggle.checked) {
-      htmlElement.classList.add('dark-mode');
-      localStorage.setItem('dark-mode', 'true');
-    } else {
-      htmlElement.classList.remove('dark-mode');
-      localStorage.setItem('dark-mode', 'false');
-    }
-  });
-// ]]>
-</script>
 
 <!-- Default Markups for Blogger Widgets -->
 <b:defaultmarkups>
   <b:defaultmarkup type='PopularPosts'>
     <b:includable id='main'>
-      <div class='card mb-4'>
-        <div class='card-header'><data:title/></div>
-        <div class='card-body'>
-          <ul>
+      <div class='widget'>
+        <h4 class='widget-title'><data:title/></h4>
+        <div class='widget-content'>
+          <ul class="list-unstyled">
           <b:loop values='data:posts' var='post'>
             <li><a expr:href='data:post.url'><data:post.title/></a></li>
           </b:loop>
@@ -569,9 +469,9 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
   </b:defaultmarkup>
   <b:defaultmarkup type='BlogArchive'>
     <b:includable id='main'>
-      <div class='card mb-4'>
-        <div class='card-header'><data:title/></div>
-        <div class='card-body'>
+      <div class='widget'>
+        <h4 class='widget-title'><data:title/></h4>
+        <div class='widget-content'>
           <b:include name='content'/>
         </div>
       </div>
@@ -605,6 +505,69 @@ html.dark-mode #dark-mode-toggle ~ label .bi-sun {
       });
     }
   });
+// ]]>
+</script>
+
+<script>
+// <![CDATA[
+// --- Load More Posts Script ---
+document.addEventListener('DOMContentLoaded', function() {
+    var loadMoreButton = document.getElementById('load-more-button');
+    if (!loadMoreButton) {
+        return;
+    }
+
+    var postsContainer = document.getElementById('posts-container');
+    var loadMoreContainer = document.getElementById('load-more-container');
+    var nextPageUrl = loadMoreButton.href;
+
+    loadMoreButton.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        if (!nextPageUrl) {
+            loadMoreContainer.style.display = 'none';
+            return;
+        }
+
+        loadMoreButton.innerText = 'Loading...';
+        loadMoreButton.disabled = true;
+
+        fetch(nextPageUrl)
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(text) {
+                var parser = new DOMParser();
+                var htmlDocument = parser.parseFromString(text, 'text/html');
+                var newPosts = htmlDocument.querySelectorAll('#posts-container .col');
+                var newLoadMoreContainer = htmlDocument.getElementById('load-more-container');
+
+                if (newPosts.length > 0) {
+                    newPosts.forEach(function(post) {
+                        postsContainer.appendChild(post);
+                    });
+                }
+
+                if (newLoadMoreContainer) {
+                    var newLoadMoreLink = newLoadMoreContainer.querySelector('a');
+                    if (newLoadMoreLink) {
+                        nextPageUrl = newLoadMoreLink.href;
+                        loadMoreButton.innerText = 'Load More Posts';
+                        loadMoreButton.disabled = false;
+                    } else {
+                        loadMoreContainer.style.display = 'none';
+                    }
+                } else {
+                    loadMoreContainer.style.display = 'none';
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading more posts:', error);
+                loadMoreButton.innerText = 'Error. Try Again.';
+                loadMoreButton.disabled = false;
+            });
+    });
+});
 // ]]>
 </script>
 </body>
