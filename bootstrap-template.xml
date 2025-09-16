@@ -16,7 +16,7 @@
 /*
 * Bootstrap Blogger Theme - Spotlight Dark Redesign
 * --------------------------------------------------
-* @version 2.1
+* @version 2.3
 * @author Jules
 */
 
@@ -379,9 +379,7 @@ header {
               <b:if cond='data:view.isMultipleItems'>
                 <div class='row row-cols-1 row-cols-md-2 g-4' id='posts-container'>
                   <b:loop values='data:posts' var='post'>
-                      <div class='col'>
-                          <b:include data='post' name='post-card'/>
-                      </div>
+                      <b:include data='post' name='post-card'/>
                   </b:loop>
                 </div>
                 <div class='text-center mt-4' id='load-more-container'>
@@ -401,26 +399,28 @@ header {
             </b:includable>
 
             <b:includable id='post-card' var='post'>
-                <div expr:class='&quot;card h-100 &quot; + data:post.labels[0].name'>
-                    <a expr:href='data:post.url'>
-                        <b:if cond='data:post.firstImageUrl'>
-                            <img class='card-img-top lazyload' expr:data-src='data:post.firstImageUrl' alt='...'/>
-                        <b:else/>
-                            <img class='card-img-top lazyload' data-src='https://via.placeholder.com/700x350' alt='...'/>
-                        </b:if>
-                    </a>
-                    <div class='card-body'>
-                      <h2 class='card-title h5'><a expr:href='data:post.url'><data:post.title/></a></h2>
-                      <p class='card-text text-muted fs-sm'>
-                        <span class='me-2'><i class='bi bi-person'/> <data:post.author/></span>
-                        <span class='me-2'><i class='bi bi-calendar'/> <data:post.timestamp/></span>
-                      </p>
-                      <p class='card-text'><b:eval expr='data:post.snippets.long ? data:post.snippets.long : data:post.body snippet { length: 150, links: false, linebreaks: true }'/></p>
-                    </div>
-                    <div class='card-footer'>
-                        <a class='btn btn-primary btn-sm' expr:href='data:post.url'>Read More</a>
-                    </div>
+              <div expr:class='&quot;col &quot; + (data:post.labels ? data:post.labels.map(l => l.name).join(&quot; &quot;) : &quot;&quot;)'>
+                <div class='card h-100'>
+                  <a expr:href='data:post.url'>
+                      <b:if cond='data:post.firstImageUrl'>
+                          <img class='card-img-top lazyload' expr:data-src='data:post.firstImageUrl' alt='...'/>
+                      <b:else/>
+                          <img class='card-img-top lazyload' data-src='https://via.placeholder.com/700x350' alt='...'/>
+                      </b:if>
+                  </a>
+                  <div class='card-body'>
+                    <h2 class='card-title h5'><a expr:href='data:post.url'><data:post.title/></a></h2>
+                    <p class='card-text text-muted fs-sm'>
+                      <span class='me-2'><i class='bi bi-person'/> <data:post.author/></span>
+                      <span class='me-2'><i class='bi bi-calendar'/> <data:post.timestamp/></span>
+                    </p>
+                    <p class='card-text'><b:eval expr='data:post.snippets.long ? data:post.snippets.long : data:post.body snippet { length: 150, links: false, linebreaks: true }'/></p>
+                  </div>
+                  <div class='card-footer'>
+                      <a class='btn btn-primary btn-sm' expr:href='data:post.url'>Read More</a>
+                  </div>
                 </div>
+              </div>
             </b:includable>
 
             <b:includable id='item-post' var='post'>
@@ -642,57 +642,46 @@ header {
 <!-- Theme-specific Scripts -->
 <script>
 // <![CDATA[
-  // --- Featured Posts Mover Script ---
+  // --- Featured Posts Mover Script v3 ---
   document.addEventListener("DOMContentLoaded", function() {
     var mainFeaturePlaceholder = document.getElementById('feature-main-placeholder');
     var minorFeaturePlaceholder = document.getElementById('feature-minor-placeholder');
     var postsContainer = document.getElementById('posts-container');
     if (!postsContainer || !mainFeaturePlaceholder || !minorFeaturePlaceholder) return;
 
-    var allPosts = postsContainer.querySelectorAll('.col');
-    allPosts.forEach(function(postNode) {
-        var card = postNode.querySelector('.card');
-        if (!card) return;
+    var mainFeatureNode = postsContainer.querySelector('.FeatureMain');
+    var minor1Node = postsContainer.querySelector('.FeatureMinor1');
+    var minor2Node = postsContainer.querySelector('.FeatureMinor2');
 
-        var featureLabel = null;
-        var classList = card.className.split(/\s+/);
-        for (var i = 0; i < classList.length; i++) {
-            if (classList[i] === 'FeatureMain' || classList[i] === 'FeatureMinor1' || classList[i] === 'FeatureMinor2') {
-                featureLabel = classList[i];
-                break;
-            }
+    // Handle Main Feature Post
+    if (mainFeatureNode) {
+        var card = mainFeatureNode.querySelector('.card');
+        if (card) {
+            var postUrl = card.querySelector('a').href;
+            var postImage = card.querySelector('img').getAttribute('data-src');
+            var postTitle = card.querySelector('.card-title a').innerText;
+            var postSnippet = card.querySelector('.card-text').innerText;
+
+            var jumbotronHtml = `
+                <div class='p-4 p-md-5 mb-4 text-white rounded bg-dark feature-jumbotron' style='background-image: url("${postImage}");'>
+                  <div class='col-md-6 px-0'>
+                    <h1 class='display-4 fst-italic'>${postTitle}</h1>
+                    <p class='lead my-3'>${postSnippet}</p>
+                    <p class='lead mb-0'><a href='${postUrl}' class='text-white fw-bold'>Continue reading...</a></p>
+                  </div>
+                </div>`;
+            mainFeaturePlaceholder.innerHTML = jumbotronHtml;
+            mainFeatureNode.parentNode.removeChild(mainFeatureNode);
         }
+    }
 
-        if (featureLabel) {
-            if (featureLabel === 'FeatureMain') {
-                // Transform and move to main placeholder
-                var postUrl = card.querySelector('a').href;
-                var postImage = card.querySelector('img').getAttribute('data-src');
-                var postTitle = card.querySelector('.card-title a').innerText;
-                var postSnippet = card.querySelector('.card-text').innerText;
-
-                var jumbotronHtml = `
-                    <div class='p-4 p-md-5 mb-4 text-white rounded bg-dark feature-jumbotron' style='background-image: url("${postImage}");'>
-                      <div class='col-md-6 px-0'>
-                        <h1 class='display-4 fst-italic'>${postTitle}</h1>
-                        <p class='lead my-3'>${postSnippet}</p>
-                        <p class='lead mb-0'><a href='${postUrl}' class='text-white fw-bold'>Continue reading...</a></p>
-                      </div>
-                    </div>`;
-                mainFeaturePlaceholder.innerHTML = jumbotronHtml;
-                postNode.parentNode.removeChild(postNode); // Remove from original position
-
-            } else if (featureLabel === 'FeatureMinor1' || featureLabel === 'FeatureMinor2') {
-                // Move to minor placeholder
-                var cardHtml = postNode.innerHTML;
-                var minorCol = document.createElement('div');
-                minorCol.className = 'col-md-6';
-                minorCol.innerHTML = cardHtml;
-                minorFeaturePlaceholder.appendChild(minorCol);
-                postNode.parentNode.removeChild(postNode); // Remove from original position
-            }
-        }
-    });
+    // Handle Minor Feature Posts
+    if (minor1Node) {
+        minorFeaturePlaceholder.appendChild(minor1Node);
+    }
+    if (minor2Node) {
+        minorFeaturePlaceholder.appendChild(minor2Node);
+    }
   });
 // ]]>
 </script>
