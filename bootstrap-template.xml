@@ -349,60 +349,87 @@ header {
   </nav>
 </header>
 
-<!-- Featured Posts Section -->
-<div class='container mt-4'>
-  <b:section class='features' id='features' maxwidgets='1' showaddelement='no'>
-    <b:widget id='Blog10' locked='true' title='Featured Posts' type='Blog' version='2'>
+<!-- Featured Post Section -->
+<div class='container'>
+  <b:section class='featured-post' id='featured-post' maxwidgets='1' showaddelement='yes'>
+    <b:widget id='HTML3' locked='false' title='Featured Post' type='HTML' version='1'>
       <b:includable id='main'>
-        <b:switch var='data:blog.pageType'>
-          <b:case value='index'>
-            <b:include name='_showMainFeature'/>
-            <b:include name='_showMinorFeatures'/>
-          </b:case>
-        </b:switch>
-      </b:includable>
-
-      <b:includable id='_showMainFeature' var='post'>
-        <b:loop values='data:posts' var='post' index='i'>
-          <b:if cond='data:post.labels any (l => l.name == &quot;FeatureMain&quot;)'>
-            <div class='p-4 p-md-5 mb-4 text-white rounded bg-dark feature-jumbotron' expr:style='&quot;background-image: url(&quot; + data:post.firstImageUrl + &quot;);&quot;'>
-              <div class='col-md-6 px-0'>
-                <h1 class='display-4 fst-italic'><data:post.title/></h1>
-                <p class='lead my-3'><b:eval expr='data:post.snippets.long ? data:post.snippets.long : &quot;&quot;'/></p>
-                <p class='lead mb-0'><a expr:href='data:post.url' class='text-white fw-bold'>Continue reading...</a></p>
-              </div>
-            </div>
-          </b:if>
-        </b:loop>
-      </b:includable>
-
-      <b:includable id='_showMinorFeatures'>
-        <div class='row mb-2'>
-          <b:loop values='data:posts' var='post'>
-            <b:if cond='data:post.labels any (l => l.name in {&quot;FeatureMinor1&quot;, &quot;FeatureMinor2&quot;})'>
-              <div class='col-md-6'>
-                <div class='card flex-md-row mb-4 shadow-sm h-md-250'>
-                  <div class='card-body d-flex flex-column align-items-start'>
-                    <strong class='d-inline-block mb-2 text-primary'>
-                      <b:loop values='data:post.labels where (l => l.name not in {&quot;FeatureMain&quot;, &quot;FeatureMinor1&quot;, &quot;FeatureMinor2&quot;})' var='label' index='i'>
-                        <b:if cond='data:i == 0'><data:label.name/></b:if>
-                      </b:loop>
-                    </strong>
-                    <h3 class='mb-0'>
-                      <a class='text-light' expr:href='data:post.url'><data:post.title/></a>
-                    </h3>
-                    <div class='mb-1 text-muted'><data:post.timestamp/></div>
-                    <p class='card-text mb-auto'><b:eval expr='data:post.snippets.long ? data:post.snippets.long : &quot;&quot;'/></p>
-                    <a expr:href='data:post.url'>Continue reading</a>
-                  </div>
-                  <b:if cond='data:post.firstImageUrl'>
-                    <img class='card-img-right flex-auto d-none d-md-block' expr:src='data:post.firstImageUrl' style='width: 200px; height: 250px; object-fit: cover;'/>
-                  </b:if>
-                </div>
-              </div>
-            </b:if>
-          </b:loop>
+        <!-- Shortcode for featured post: {getPosts} $label={Label Name} -->
+        <div id='featured-post-container' class='hero-post'>
+          <data:content/>
         </div>
+        <script>
+        // <![CDATA[
+          // --- Featured Post Script v2 ---
+          // Fetches and displays a featured post based on a shortcode.
+          // Shortcode: {getPosts} $label={Label Name}
+
+          var featuredPostContainer = document.getElementById('featured-post-container');
+          if (featuredPostContainer) {
+            var shortcode = featuredPostContainer.innerText.trim();
+            var labelMatch = shortcode.match(/\$label=\{([^}]+)\}/);
+            var label = null;
+            if (labelMatch && labelMatch[1]) {
+                label = labelMatch[1];
+            }
+
+            var feedUrl;
+            if (shortcode.includes('{getPosts}')) {
+                if (label && label.toLowerCase() !== 'recent') {
+                    feedUrl = '/feeds/posts/default/-/' + encodeURIComponent(label) + '?alt=json-in-script&max-results=1&callback=showFeaturedPost';
+                } else {
+                    // Default to recent post
+                    feedUrl = '/feeds/posts/default?alt=json-in-script&max-results=1&callback=showFeaturedPost';
+                }
+
+                var script = document.createElement('script');
+                script.src = feedUrl;
+                document.body.appendChild(script);
+            }
+          }
+
+          // Callback function to render the featured post.
+          function showFeaturedPost(json) {
+            if (!json.feed || !json.feed.entry || json.feed.entry.length === 0) {
+                if (featuredPostContainer) featuredPostContainer.style.display = 'none';
+                return;
+            }
+
+            var entry = json.feed.entry[0];
+            var postTitle = entry.title.$t;
+
+            var postUrl;
+            for (var i = 0; i < entry.link.length; i++) {
+                if (entry.link[i].rel == 'alternate') {
+                    postUrl = entry.link[i].href;
+                    break;
+                }
+            }
+
+            if (!postUrl) return;
+
+            var postSnippet = ("summary" in entry) ? entry.summary.$t.replace(/<[^>]*>/g, "").substring(0, 250) + '...' : "";
+            var postImage = ("media$thumbnail" in entry) ? entry.media$thumbnail.url.replace('/s72-c/', '/s1600/') : "https://via.placeholder.com/800x400";
+
+            var html = '<div class="card flex-md-row mb-4 shadow-sm h-md-250">';
+            html += '<img data-src="' + postImage + '" class="card-img-left flex-auto d-none d-md-block lazyload" style="width: 50%; object-fit: cover;" alt="' + postTitle + '"/>';
+            html += '<div class="card-body d-flex flex-column align-items-start">';
+            html += '<h2 class="mb-0"><a class="text-light" href="' + postUrl + '">' + postTitle + '</a></h2>';
+            html += '<div class="mb-1 text-muted">' + new Date(entry.published.$t).toLocaleDateString() + '</div>';
+            html += '<p class="card-text mb-auto">' + postSnippet + '</p>';
+            html += '<a class="stretched-link" href="' + postUrl + '">Continue reading</a>';
+            html += '</div>';
+            html += '</div>';
+
+            if (featuredPostContainer) {
+                featuredPostContainer.innerHTML = html;
+                if (window.lazySizes) {
+                    lazySizes.loader.checkElems();
+                }
+            }
+          }
+        // ]]>
+        </script>
       </b:includable>
     </b:widget>
   </b:section>
@@ -425,8 +452,13 @@ header {
       <!-- Blog Posts Column -->
       <div class='col-md-8'>
         <b:section class='main' id='main' showaddelement='yes'>
-          <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='1'>
+          <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2'>
             <b:includable id='main'>
+              <b:if cond='data:view.isHomepage'>
+                <b:include name='_showMainFeature'/>
+                <b:include name='_showMinorFeatures'/>
+              </b:if>
+
               <!-- Homepage and Archive Views -->
               <b:if cond='data:view.isMultipleItems'>
                 <div class='row row-cols-1 row-cols-md-2 g-4' id='posts-container'>
@@ -452,6 +484,49 @@ header {
               <b:if cond='!data:view.isHomepage'>
                 <b:include name='nextprev'/>
               </b:if>
+            </b:includable>
+
+            <b:includable id='_showMainFeature' var='post'>
+              <b:loop values='data:posts' var='post' index='i'>
+                <b:if cond='data:post.labels any (l => l.name == &quot;FeatureMain&quot;)'>
+                  <div class='p-4 p-md-5 mb-4 text-white rounded bg-dark feature-jumbotron' expr:style='&quot;background-image: url(\&quot;&quot; + data:post.firstImageUrl + &quot;\&quot;);&quot;'>
+                    <div class='col-md-6 px-0'>
+                      <h1 class='display-4 fst-italic'><data:post.title/></h1>
+                      <p class='lead my-3'><b:eval expr='data:post.snippets.long ? data:post.snippets.long : &quot;&quot;'/></p>
+                      <p class='lead mb-0'><a expr:href='data:post.url' class='text-white fw-bold'>Continue reading...</a></p>
+                    </div>
+                  </div>
+                </b:if>
+              </b:loop>
+            </b:includable>
+
+            <b:includable id='_showMinorFeatures'>
+              <div class='row mb-2'>
+                <b:loop values='data:posts' var='post'>
+                  <b:if cond='data:post.labels any (l => l.name in {&quot;FeatureMinor1&quot;, &quot;FeatureMinor2&quot;})'>
+                    <div class='col-md-6'>
+                      <div class='card flex-md-row mb-4 shadow-sm h-md-250'>
+                        <div class='card-body d-flex flex-column align-items-start'>
+                          <strong class='d-inline-block mb-2 text-primary'>
+                            <b:loop values='data:post.labels where (l => l.name not in {&quot;FeatureMain&quot;, &quot;FeatureMinor1&quot;, &quot;FeatureMinor2&quot;})' var='label' index='i'>
+                              <b:if cond='data:i == 0'><data:label.name/></b:if>
+                            </b:loop>
+                          </strong>
+                          <h3 class='mb-0'>
+                            <a class='text-light' expr:href='data:post.url'><data:post.title/></a>
+                          </h3>
+                          <div class='mb-1 text-muted'><data:post.timestamp/></div>
+                          <p class='card-text mb-auto'><b:eval expr='data:post.snippets.long ? data:post.snippets.long : &quot;&quot;'/></p>
+                          <a expr:href='data:post.url'>Continue reading</a>
+                        </div>
+                        <b:if cond='data:post.firstImageUrl'>
+                          <img class='card-img-right flex-auto d-none d-md-block' expr:src='data:post.firstImageUrl' style='width: 200px; height: 250px; object-fit: cover;'/>
+                        </b:if>
+                      </div>
+                    </div>
+                  </b:if>
+                </b:loop>
+              </div>
             </b:includable>
 
             <b:includable id='post-card' var='post'>
