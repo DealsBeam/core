@@ -6,9 +6,9 @@
  I have added comments throughout the file to explain the structure and to point out potential issues or areas for improvement.
  You can find comments prefixed with "JULES' ANALYSIS:" next to the relevant code sections.
 
- ---
+ *******************************************
  ### PART 1: GENERAL TEMPLATE STRUCTURE ###
- ---
+ *******************************************
  This is a modern Blogger (V3) theme. It's well-structured and uses up-to-date features. Here’s a breakdown of the main parts:
 
  1. <head> Section: This is the "brain" of your blog's pages. It contains:
@@ -26,9 +26,9 @@
 
  4. JavaScript (at the end of the file): The <script> tags at the very bottom add interactive features like the dark mode toggle, the "back to top" button, and lazy loading for images.
 
- ---
+ **************************************************
  ### PART 2: POTENTIAL ISSUES & SUGGESTIONS ###
- ---
+ **************************************************
  I have identified several areas that could be improved for better performance, maintainability, and accessibility. I've marked each one below with a "JULES' ANALYSIS" comment. Here is a summary:
 
  1. Hardcoded Information: Your blog's name ("IndieKings") and copyright year ("2025") are hardcoded. These should be dynamic to avoid manual updates.
@@ -266,9 +266,6 @@
 .header-title a{color:var(--color-header-title)}
 
 .header-subtitle{color:var(--color-header-subtitle);font-size:1.25rem}
-
-<!-- JULES' ANALYSIS (Suggestion 2): This search button is a <label>. For better accessibility, it should be a <button> element. I can refactor this while keeping the functionality. -->
-.header-search{right:2rem}
 
 .header-search:before{pointer-events:var(--switch-search,none);opacity:var(--switch-search,0)}
 
@@ -1371,7 +1368,7 @@ a:hover::after {
               <b:if cond='data:post.featuredImage'>
                 <b:with value='data:post.featuredImage.isYoutube' var='isYoutube'>
                   <b:class name='has-image'/>
-                  <b:include data='{ class: &quot;card-image lazyload&quot;, src: data:post.featuredImage, resize: (data:isYoutube ? 600 : 420), ratio: (data:isYoutube ? &quot;16:9&quot; : &quot;4:3&quot;), params: data:skin.vars.c_imageParams, loading: &quot;lazy&quot; }' name='@image'/>
+                  <b:include data='{ class: "card-image lazyload", src: data:post.featuredImage, resize: (data:isYoutube ? 600 : 420), ratio: (data:isYoutube ? &quot;16:9&quot; : &quot;4:3&quot;), params: data:skin.vars.c_imageParams, loading: "lazy" }' name='@image'/>
                 </b:with>
               </b:if>
               <div class='card-meta'>
@@ -1896,7 +1893,7 @@ a:hover::after {
           </div>
           <!-- JULES' ANALYSIS (Suggestion 2): Changed from a <label> to a <button> for better accessibility. -->
           <button aria-label='Open Search' class='header-search switch' id='search-toggle-button' type='button'>
-            <svg class='i i-search'><use href='#icon-search'/></svg>
+             <svg class='i i-search'><use href='#icon-search'/></svg>
           </button>
         </b:if>
       </b:includable>
